@@ -437,8 +437,7 @@ function setupEventListeners() {
         addOrderBtn.setAttribute('data-listener-added', 'true');
     }
     
-    // Initialize multi-step form
-    initializeMultiStepForm();
+    // Form is now simple single-step
     
     // Modal controls
     if (closeModal && !closeModal.hasAttribute('data-listener-added')) {
@@ -451,10 +450,7 @@ function setupEventListeners() {
         saveOrderBtn.addEventListener('click', handleAddOrder);
         saveOrderBtn.setAttribute('data-listener-added', 'true');
     }
-    if (addItemBtn && !addItemBtn.hasAttribute('data-listener-added')) {
-        addItemBtn.addEventListener('click', addItemToList);
-        addItemBtn.setAttribute('data-listener-added', 'true');
-    }
+    // addItemBtn event listener removed - using HTML onclick instead
     
     // Calendar navigation
     if (prevMonthBtn && !prevMonthBtn.hasAttribute('data-listener-added')) {
@@ -570,16 +566,13 @@ function showAddOrderModal() {
     if (addOrderModal) {
         addOrderModal.classList.remove('hidden');
         
-        // Reset form to first step
-        resetForm();
-        
-        // Only reset order items if we're not editing an existing order
+        // Only reset form if we're not editing an existing order
         if (!window.editingOrder) {
+            resetForm();
             currentOrderItems = [];
             renderOrderItems();
+            setDefaultDate();
         }
-        
-        setDefaultDate();
     }
 }
 
@@ -641,28 +634,49 @@ function removeOrderItem(index) {
 }
 
 function handleAddOrder() {
-    // Validate required fields
-    const name = customerNameInput ? customerNameInput.value.trim() : '';
-    const contact = contactInput ? contactInput.value.trim() : '';
-    const date = orderDateInput ? orderDateInput.value : '';
-    const time = orderTimeInput ? orderTimeInput.value : '';
-    const deliveryMode = deliveryModeSelect ? deliveryModeSelect.value : '';
+    // Get form values
+    const customerName = document.getElementById('customer-name').value.trim();
+    const contact = document.getElementById('contact').value.trim();
+    const orderDate = document.getElementById('order-date').value;
+    const orderTime = document.getElementById('order-time').value;
+    const deliveryMode = document.getElementById('delivery-mode').value;
+    const deliveryAddress = document.getElementById('delivery-address').value.trim();
+    const notes = document.getElementById('notes').value.trim();
     
-    if (!name || !contact || !date || !time || !deliveryMode || currentOrderItems.length === 0) {
-        alert('Please fill in all required fields and add at least one order item');
+    // Validate required fields
+    if (!customerName || !contact || !orderDate || !orderTime || !deliveryMode) {
+        alert('Please fill in all required fields');
+        return;
+    }
+    
+    // Validate delivery address if delivery mode is selected
+    if (deliveryMode === 'Delivery' && !deliveryAddress) {
+        alert('Please enter delivery address');
+        return;
+    }
+    
+    // Get order items
+    const orderItems = [];
+    const itemRows = document.querySelectorAll('.item-row');
+    itemRows.forEach(row => {
+        const name = row.querySelector('.item-name').textContent;
+        const quantity = row.querySelector('.item-quantity').textContent.replace('Qty: ', '');
+        orderItems.push({ name, quantity });
+    });
+    
+    if (orderItems.length === 0) {
+        alert('Please add at least one item to the order');
         return;
     }
     
     const orderData = {
-        name: name,
+        customerName: customerName,
         contact: contact,
-        date: new Date(date + 'T' + time),
+        date: new Date(orderDate + 'T' + orderTime),
         deliveryMode: deliveryMode,
-        orderList: [...currentOrderItems],
-        notes: notesInput ? notesInput.value.trim() : '',
-        store: storeSelect ? storeSelect.value : 'suyacitycatering',
-        paymentStatus: paymentStatusSelect ? paymentStatusSelect.value : 'Not Paid',
-        deliveryAddress: deliveryMode === 'Delivery' ? (deliveryAddressInput ? deliveryAddressInput.value.trim() : '') : undefined
+        items: orderItems,
+        notes: notes,
+        deliveryAddress: deliveryMode === 'Delivery' ? deliveryAddress : ''
     };
     
     if (window.editingOrder) {
@@ -842,13 +856,13 @@ function renderOrders() {
             minute: '2-digit' 
         }).toUpperCase();
         
-        const orderListString = order.orderList.map(item => 
+        const orderListString = (order.items || order.orderList).map(item => 
             `${item.quantity}x ${item.name}`
         ).join(', ');
         
         orderElement.innerHTML = `
             <div>
-                <div>${order.name}</div>
+                <div>${order.name || order.customerName}</div>
                 <div class="order-list-buttons">
                     <button class="order-info-edit" onclick="editOrder('${order._id}')">
                         <span class="material-symbols-outlined">edit</span>
@@ -876,19 +890,52 @@ function editOrder(orderId) {
     if (!order) return;
     
     // Populate form with order data
-    if (customerNameInput) customerNameInput.value = order.name;
+    const customerNameInput = document.getElementById('customer-name');
+    const contactInput = document.getElementById('contact');
+    const orderDateInput = document.getElementById('order-date');
+    const orderTimeInput = document.getElementById('order-time');
+    const deliveryModeSelect = document.getElementById('delivery-mode');
+    const deliveryAddressInput = document.getElementById('delivery-address');
+    const notesInput = document.getElementById('notes');
+    
+    if (customerNameInput) customerNameInput.value = order.name || order.customerName;
     if (contactInput) contactInput.value = order.contact;
     if (orderDateInput) orderDateInput.value = order.date.toISOString().split('T')[0];
     if (orderTimeInput) orderTimeInput.value = order.date.toTimeString().slice(0, 5);
-    if (storeSelect) storeSelect.value = order.store;
     if (deliveryModeSelect) deliveryModeSelect.value = order.deliveryMode;
     if (deliveryAddressInput) deliveryAddressInput.value = order.deliveryAddress || '';
-    if (paymentStatusSelect) paymentStatusSelect.value = order.paymentStatus;
     if (notesInput) notesInput.value = order.notes || '';
     
-    // Set order items
-    currentOrderItems = [...order.orderList];
-    renderOrderItems();
+    // Show/hide delivery address based on delivery mode
+    if (order.deliveryMode === 'Delivery') {
+        document.getElementById('address-group').style.display = 'block';
+    } else {
+        document.getElementById('address-group').style.display = 'none';
+    }
+    
+    // Clear existing items and populate with order items
+    const itemsList = document.getElementById('order-items-list');
+    if (itemsList) {
+        itemsList.innerHTML = '';
+        
+        const orderItems = order.items || order.orderList || [];
+        orderItems.forEach(item => {
+            const itemRow = document.createElement('div');
+            itemRow.className = 'item-row';
+            const itemId = Date.now() + Math.random(); // Simple ID generation
+            itemRow.innerHTML = `
+                <div class="item-info">
+                    <span class="item-name">${item.name}</span>
+                    <span class="item-quantity">Qty: ${item.quantity}</span>
+                </div>
+                <button type="button" class="remove-item-btn" onclick="removeItem(${itemId})">
+                    <span class="material-symbols-outlined">delete</span>
+                </button>
+            `;
+            itemRow.dataset.itemId = itemId;
+            itemsList.appendChild(itemRow);
+        });
+    }
     
     // Set editing state
     window.editingOrder = order;
@@ -916,107 +963,24 @@ function confirmDeleteOrder() {
     }
 }
 
-// Multi-step form functionality
-let currentStep = 1;
-const totalSteps = 3;
-
-function initializeMultiStepForm() {
-    const nextBtn = document.getElementById('next-step');
-    const prevBtn = document.getElementById('prev-step');
-    const saveBtn = document.getElementById('save-order-btn');
-    const deliveryMode = document.getElementById('delivery-mode');
-    const addressGroup = document.getElementById('address-group');
-
-    // Step navigation
-    nextBtn.addEventListener('click', nextStep);
-    prevBtn.addEventListener('click', prevStep);
-    saveBtn.addEventListener('click', saveOrder);
-
-    // Show/hide delivery address based on delivery mode
-    deliveryMode.addEventListener('change', function() {
-        if (this.value === 'Delivery') {
-            addressGroup.style.display = 'block';
-        } else {
-            addressGroup.style.display = 'none';
-        }
-    });
-
-    // Initialize form
-    updateStepDisplay();
-}
-
-function nextStep() {
-    if (validateCurrentStep()) {
-        if (currentStep < totalSteps) {
-            currentStep++;
-            updateStepDisplay();
-        }
-    }
-}
-
-function prevStep() {
-    if (currentStep > 1) {
-        currentStep--;
-        updateStepDisplay();
-    }
-}
-
-function updateStepDisplay() {
-    // Update progress indicators
-    document.querySelectorAll('.progress-step').forEach((step, index) => {
-        step.classList.toggle('active', index + 1 === currentStep);
-    });
-
-    // Show/hide form steps
-    document.querySelectorAll('.form-step').forEach((step, index) => {
-        step.classList.toggle('active', index + 1 === currentStep);
-    });
-
-    // Update navigation buttons
-    const prevBtn = document.getElementById('prev-step');
-    const nextBtn = document.getElementById('next-step');
-    const saveBtn = document.getElementById('save-order-btn');
-
-    prevBtn.style.display = currentStep > 1 ? 'block' : 'none';
-    
-    if (currentStep === totalSteps) {
-        nextBtn.style.display = 'none';
-        saveBtn.style.display = 'block';
-    } else {
-        nextBtn.style.display = 'block';
-        saveBtn.style.display = 'none';
-    }
-}
-
-function validateCurrentStep() {
-    const currentStepElement = document.getElementById(`step-${currentStep}`);
-    const requiredFields = currentStepElement.querySelectorAll('input[required], select[required]');
-    
-    let isValid = true;
-    requiredFields.forEach(field => {
-        if (!field.value.trim()) {
-            field.style.borderColor = '#dc2626';
-            isValid = false;
-        } else {
-            field.style.borderColor = '#d1d5db';
-        }
-    });
-
-    return isValid;
-}
-
+// Simple form functionality
 function resetForm() {
-    currentStep = 1;
-    updateStepDisplay();
-    
     // Clear all form fields
-    document.querySelectorAll('#add-order-modal input, #add-order-modal select, #add-order-modal textarea').forEach(field => {
-        field.value = '';
-        field.style.borderColor = '#d1d5db';
-    });
+    document.getElementById('customer-name').value = '';
+    document.getElementById('contact').value = '';
+    document.getElementById('order-date').value = '';
+    document.getElementById('order-time').value = '';
+    document.getElementById('delivery-mode').value = '';
+    document.getElementById('delivery-address').value = '';
+    document.getElementById('notes').value = '';
+    document.getElementById('item-name').value = '';
+    document.getElementById('item-quantity').value = '';
     
     // Clear items list
-    document.getElementById('order-items-list').innerHTML = '';
+    const itemsList = document.getElementById('order-items-list');
+    if (itemsList) {
+        itemsList.innerHTML = '';
+    }
     
     // Hide delivery address
     document.getElementById('address-group').style.display = 'none';
@@ -1024,15 +988,29 @@ function resetForm() {
 
 // Enhanced item management
 function addItemToList() {
-    const itemName = document.getElementById('item-name').value.trim();
-    const itemQuantity = document.getElementById('item-quantity').value;
+    const itemNameInput = document.getElementById('item-name');
+    const itemQuantityInput = document.getElementById('item-quantity');
+    
+    const itemName = itemNameInput ? itemNameInput.value.trim() : '';
+    const itemQuantity = itemQuantityInput ? itemQuantityInput.value.trim() : '';
 
     if (!itemName || !itemQuantity) {
         alert('Please fill in both item name and quantity');
         return;
     }
 
+    const quantity = parseInt(itemQuantity);
+    if (isNaN(quantity) || quantity < 1 || quantity > 500) {
+        alert('Quantity must be a number between 1 and 500');
+        return;
+    }
+
     const itemsList = document.getElementById('order-items-list');
+    if (!itemsList) {
+        alert('Items list not found');
+        return;
+    }
+
     const itemId = Date.now(); // Simple ID generation
 
     const itemRow = document.createElement('div');
@@ -1051,8 +1029,8 @@ function addItemToList() {
     itemsList.appendChild(itemRow);
 
     // Clear input fields
-    document.getElementById('item-name').value = '';
-    document.getElementById('item-quantity').value = '';
+    if (itemNameInput) itemNameInput.value = '';
+    if (itemQuantityInput) itemQuantityInput.value = '';
 }
 
 function removeItem(itemId) {
@@ -1074,6 +1052,7 @@ function toggleDeliveryAddress() {
         }
     }
 }
+
 
 // Make functions globally available for onclick handlers
 window.editOrder = editOrder;

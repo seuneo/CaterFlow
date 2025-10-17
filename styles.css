@@ -615,8 +615,7 @@ color: white;
 }
 
 .order-form-header{
-  padding: 24px 24px 0 24px;
-  border-bottom: 1px solid #e5e7eb;
+  padding: 16px 24px 0 24px;
   position: relative;
 }
 
@@ -628,9 +627,14 @@ color: white;
   border: none;
   cursor: pointer;
   color: #6b7280;
-  padding: 8px;
-  border-radius: 6px;
+  padding: 4px;
+  border-radius: 4px;
   transition: background-color 0.2s;
+  width: 24px;
+  height: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .order-form-exit:hover{
@@ -638,10 +642,10 @@ color: white;
 }
 
 .order-form-title{
-  font-size: 24px;
+  font-size: 18px;
   font-weight: 600;
-  color: #111827;
-  margin: 0 0 24px 0;
+  color: #000000E6;
+  margin: 0 0 16px 0;
   text-align: center;
 }
 
@@ -710,7 +714,7 @@ color: white;
 
 .order-form-content{
   flex: 1;
-  padding: 24px;
+  padding: 0 24px 24px 24px;
   overflow-y: auto;
 }
 
@@ -739,6 +743,23 @@ color: white;
   gap: 20px;
 }
 
+.form-section {
+  margin-bottom: 16px;
+}
+
+.section-title {
+  font-size: 16px;
+  font-weight: 400;
+  color: #374151;
+  margin: 0 0 12px 0;
+}
+
+.form-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+
 .form-group{
   display: flex;
   flex-direction: column;
@@ -757,7 +778,7 @@ color: white;
 
 .form-input{
   width: 100%;
-  padding: 12px 16px;
+  padding: 8px 12px;
   border: 1px solid #d1d5db;
   border-radius: 8px;
   font-size: 16px;

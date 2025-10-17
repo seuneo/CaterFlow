@@ -145,59 +145,38 @@
     <!-- Add Order Modal -->
     <div id="add-order-modal" class="order-form-bg hidden">
         <div class="order-form-container">
-            <!-- Header with Progress -->
             <div class="order-form-header">
                 <button class="order-form-exit" id="close-modal" onclick="hideAddOrderModal()">
                     <span class="material-symbols-outlined">close</span>
                 </button>
                 <h2 class="order-form-title">Add New Order</h2>
-                <div class="order-form-progress">
-                    <div class="progress-step active" data-step="1">
-                        <span class="step-number">1</span>
-                        <span class="step-label">Customer</span>
-                    </div>
-                    <div class="progress-step" data-step="2">
-                        <span class="step-number">2</span>
-                        <span class="step-label">Details</span>
-                    </div>
-                    <div class="progress-step" data-step="3">
-                        <span class="step-number">3</span>
-                        <span class="step-label">Items</span>
-                    </div>
-                </div>
             </div>
-
-            <!-- Form Content -->
             <div class="order-form-content">
-                <!-- Step 1: Customer Details -->
-                <div class="form-step active" id="step-1">
+                <form id="add-order-form">
                     <div class="form-section">
                         <h3 class="section-title">Customer Information</h3>
                         <div class="form-grid">
                             <div class="form-group">
-                                <label class="form-label">Full Name *</label>
-                                <input id="customer-name" name="name" type="text" required class="form-input" placeholder="Enter customer name" />
+                                <label class="form-label">Customer Name *</label>
+                                <input id="customer-name" name="customerName" type="text" class="form-input" placeholder="Enter customer name" required />
                             </div>
                             <div class="form-group">
-                                <label class="form-label">Phone Number *</label>
-                                <input id="contact" name="contact" type="tel" required class="form-input" placeholder="Enter phone number" />
+                                <label class="form-label">Contact *</label>
+                                <input id="contact" name="contact" type="text" class="form-input" placeholder="Enter contact information" required />
                             </div>
                         </div>
                     </div>
-                </div>
-
-                <!-- Step 2: Order Details -->
-                <div class="form-step" id="step-2">
+                    
                     <div class="form-section">
-                        <h3 class="section-title">Order Information</h3>
+                        <h3 class="section-title">Order Details</h3>
                         <div class="form-grid">
                             <div class="form-group">
                                 <label class="form-label">Date *</label>
-                                <input id="order-date" name="date" type="date" required class="form-input" />
+                                <input id="order-date" name="orderDate" type="date" class="form-input" required />
                             </div>
                             <div class="form-group">
                                 <label class="form-label">Time *</label>
-                                <input id="order-time" name="time" type="time" required class="form-input" />
+                                <input id="order-time" name="orderTime" type="time" class="form-input" required />
                             </div>
                             <div class="form-group">
                                 <label class="form-label">Delivery Mode *</label>
@@ -213,39 +192,35 @@
                             </div>
                         </div>
                     </div>
-                </div>
-
-                <!-- Step 3: Order Items -->
-                <div class="form-step" id="step-3">
+                    
                     <div class="form-section">
                         <h3 class="section-title">Order Items</h3>
-                        <div class="add-item-section">
+                        <div class="form-group">
                             <div class="add-item-form">
-                                <input id="item-name" name="item-name" placeholder="Item name" class="form-input" />
-                                <input id="item-quantity" name="item-quantity" type="number" placeholder="Qty" min="1" max="500" class="form-input" />
+                                <input id="item-name" type="text" class="form-input" placeholder="Item name" />
+                                <input id="item-quantity" type="number" class="form-input" placeholder="Qty" min="1" max="500" />
                                 <button type="button" class="add-item-btn" id="add-item-btn" onclick="addItemToList()">
                                     <span class="material-symbols-outlined">add</span>
                                     Add Item
                                 </button>
                             </div>
-                        </div>
-                        <div class="items-list" id="order-items-list">
-                            <!-- Order items will be added here -->
-                        </div>
-                        <div class="form-group">
-                            <label class="form-label">Special Notes</label>
-                            <textarea id="notes" name="notes" rows="3" class="form-input" placeholder="Any special instructions or notes..."></textarea>
+                            <div id="order-items-list" class="items-list">
+                                <!-- Items will be added here -->
+                            </div>
                         </div>
                     </div>
-                </div>
+                    
+                    <div class="form-section">
+                        <h3 class="section-title">Additional Information</h3>
+                        <div class="form-group">
+                            <label class="form-label">Notes</label>
+                            <textarea id="notes" name="notes" class="form-input" placeholder="Any special instructions or notes" rows="3"></textarea>
+                        </div>
+                    </div>
+                </form>
             </div>
-
-            <!-- Footer with Navigation -->
             <div class="order-form-footer">
-                <button type="button" class="btn-secondary" id="prev-step" style="display: none;">Previous</button>
-                <div class="footer-spacer"></div>
-                <button type="button" class="btn-primary" id="next-step">Next</button>
-                <button type="button" class="btn-primary" id="save-order-btn" style="display: none;">Create Order</button>
+                <button type="button" class="btn-primary" id="save-order-btn">Create Order</button>
             </div>
         </div>
     </div>
