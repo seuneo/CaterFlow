@@ -472,12 +472,49 @@ function setupEventListeners() {
     if (confirmDelete) confirmDelete.addEventListener('click', confirmDeleteOrder);
     
     // Menu toggle functionality
+    // Menu toggle with JavaScript state management
     const menuToggle = document.getElementById('menu__toggle');
-    if (menuToggle) {
-        menuToggle.addEventListener('change', function() {
-            // This will be handled by CSS, but we can add any additional logic here if needed
-        });
+    const menuOverlay = document.getElementById('menu__overlay');
+    let isMenuOpen = false;
+    
+    function toggleMenu() {
+        isMenuOpen = !isMenuOpen;
+        
+        if (isMenuOpen) {
+            // Menu opened
+            menuToggle.setAttribute('aria-expanded', 'true');
+            document.body.style.overflow = 'hidden';
+        } else {
+            // Menu closed
+            menuToggle.setAttribute('aria-expanded', 'false');
+            document.body.style.overflow = '';
+        }
     }
+    
+    function closeMenu() {
+        if (isMenuOpen) {
+            isMenuOpen = false;
+            menuToggle.setAttribute('aria-expanded', 'false');
+            document.body.style.overflow = '';
+        }
+    }
+    
+    // Toggle menu when button is clicked
+    if (menuToggle) {
+        menuToggle.addEventListener('click', toggleMenu);
+    }
+    
+    // Close menu when clicking overlay
+    if (menuOverlay) {
+        menuOverlay.addEventListener('click', closeMenu);
+    }
+    
+    // Close menu with Escape key
+    document.addEventListener('keydown', function(e) {
+        if (e.key === 'Escape' && isMenuOpen) {
+            closeMenu();
+        }
+    });
     
     // Close modals when clicking outside
     if (addOrderModal) {
@@ -566,6 +603,9 @@ function showAddOrderModal() {
     if (addOrderModal) {
         addOrderModal.classList.remove('hidden');
         
+        // Lock body scroll when modal is open
+        document.body.style.overflow = 'hidden';
+        
         // Only reset form if we're not editing an existing order
         if (!window.editingOrder) {
             resetForm();
@@ -578,6 +618,10 @@ function showAddOrderModal() {
 
 function hideAddOrderModal() {
     if (addOrderModal) addOrderModal.classList.add('hidden');
+    
+    // Restore body scroll when modal is closed
+    document.body.style.overflow = '';
+    
     window.editingOrder = null; // Clear editing state
     resetOrderForm();
     resetForm(); // Reset multi-step form
@@ -861,24 +905,20 @@ function renderOrders() {
         ).join(', ');
         
         orderElement.innerHTML = `
-            <div>
-                <div>${order.name || order.customerName}</div>
-                <div class="order-list-buttons">
-                    <button class="order-info-edit" onclick="editOrder('${order._id}')">
-                        <span class="material-symbols-outlined">edit</span>
-                    </button>
-                    <button class="order-info-delete" onclick="deleteOrder('${order._id}')">
-                        <span class="material-symbols-outlined">delete</span>
-                    </button>
-                </div>
+            <div class="order-customer-name">${order.name || order.customerName}</div>
+            <div class="order-list-buttons">
+                <button class="order-info-edit" onclick="editOrder('${order._id}')">
+                    <span class="material-symbols-outlined">edit</span>
+                </button>
+                <button class="order-info-delete" onclick="deleteOrder('${order._id}')">
+                    <span class="material-symbols-outlined">delete</span>
+                </button>
             </div>
-            <div>
-                <div>
-                    <div>${order.contact.slice(-4)}</div>
-                    <div class="order-info-status">${order.status}</div>
-                </div>
-                <div>${timeString}</div>
+            <div class="order-details">
+                <div class="order-contact">${order.contact.slice(-4)}</div>
+                <div class="order-info-status">${order.status}</div>
             </div>
+            <div class="order-time">${timeString}</div>
         `;
         
         ordersList.appendChild(orderElement);
@@ -944,11 +984,19 @@ function editOrder(orderId) {
 
 function deleteOrder(orderId) {
     orderToDelete = orderId;
-    if (confirmDeleteModal) confirmDeleteModal.classList.remove('hidden');
+    if (confirmDeleteModal) {
+        confirmDeleteModal.classList.remove('hidden');
+        // Lock body scroll when modal is open
+        document.body.style.overflow = 'hidden';
+    }
 }
 
 function hideDeleteModal() {
     if (confirmDeleteModal) confirmDeleteModal.classList.add('hidden');
+    
+    // Restore body scroll when modal is closed
+    document.body.style.overflow = '';
+    
     orderToDelete = null;
 }
 

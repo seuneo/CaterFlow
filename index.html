@@ -78,11 +78,11 @@
                 <div id="dashboard-title">Catering Orders</div>
             </div>
             <div class="hamburger-menu">
-                <input type="checkbox" id="menu__toggle">
-                <label class="menu__btn" for="menu__toggle">
+                <button class="menu__btn" id="menu__toggle" aria-label="Toggle navigation menu" aria-expanded="false">
                     <span></span>
-                </label>
-                <div class="menu__box">
+                </button>
+                <div class="menu__overlay" id="menu__overlay"></div>
+                <div class="menu__box" role="navigation" aria-label="Main navigation">
                     <div class="dashboard-menu-box-header">
                         <div class="dashboard-menu-box-logo">
                             <img id="caterflow-logo" src="caterflow.svg" alt="CaterFlow logo">
@@ -94,7 +94,7 @@
                         <div class="dashboard-name" id="user-greeting">Hello, User</div>
                     </div>
                     <div class="menu__item">
-                        <button id="logout-btn" class="dashboard-menu-grid">
+                        <button id="logout-btn" class="dashboard-menu-grid menu__button">
                             <span class="material-symbols-outlined">logout</span>
                             <div>Log out</div>
                         </button>

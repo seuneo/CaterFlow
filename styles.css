@@ -195,6 +195,32 @@ body{
 }
 
 
+.order-list-buttons {
+  display: flex;
+  gap: 2px;
+  align-items: center;
+  justify-content: flex-end;
+  width: 100%;
+}
+
+.order-list-buttons button {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 2px;
+  border-radius: 4px;
+  transition: background-color 0.2s;
+  width: 24px;
+  height: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.order-list-buttons button:hover {
+  background-color: #f3f4f6;
+}
+
 .order-list-buttons button span{
   font-size: 15px;
 }
@@ -470,20 +496,15 @@ color: white;
 
 .order-form-exit{
   position: absolute;
-  top: 20px;
+  top: 10px;
   right: 20px;
-  background: none;
-  border: none;
-  cursor: pointer;
-  color: #6b7280;
-  padding: 4px;
-  border-radius: 4px;
-  transition: background-color 0.2s;
-  width: 24px;
-  height: 24px;
   display: flex;
   align-items: center;
   justify-content: center;
+  cursor: pointer;
+  border-radius: 4px;
+  transition: background-color 0.2s;
+  padding: 2px;
 }
 
 .order-form-exit:hover{
@@ -508,13 +529,6 @@ color: white;
 
 .form-section{
   margin-bottom: 24px;
-}
-
-.section-title{
-  font-size: 18px;
-  font-weight: 600;
-  color: #111827;
-  margin: 0 0 20px 0;
 }
 
 .form-grid{
@@ -574,14 +588,9 @@ color: white;
   outline: none;
 }
 
-.form-input::placeholder{
-  color: #9ca3af;
-}
-
-
 .add-item-form{
   display: flex;
-  gap: 12px;
+  gap: 8px;
   align-items: end;
   flex-wrap: nowrap;
 }
@@ -593,7 +602,6 @@ color: white;
 
 .add-item-form #item-name{
   flex: 2;
-  min-width: 180px;
 }
 
 .add-item-form #item-quantity{
@@ -639,7 +647,7 @@ color: white;
 
 .item-row{
   display: flex;
-  gap: 12px;
+  gap: 8px;
   align-items: center;
   min-height: 32px;
 }
@@ -651,50 +659,39 @@ color: white;
   padding: 8px 12px;
   font-size: 14px;
   flex: 2;
-  border: 1px solid #d1d5db;
   border-radius: 8px;
-  min-width: 180px;
+  
 }
 
 .item-quantity{
   color: #111827;
   font-size: 14px;
-  text-align: center;
+  text-align: left;
   padding: 8px 12px;
   width: 80px !important;
   flex: 0 0 80px !important;
   flex-shrink: 0;
-  border: 1px solid #d1d5db;
   border-radius: 8px;
 }
 
 .remove-item-btn{
   background: none !important;
-  border: 1px solid #d1d5db !important;
   color: #6b7280 !important;
   cursor: pointer;
   padding: 6px 12px;
-  transition: background-color 0.2s;
-  font-size: 10px !important;
+  font-size: 18px !important;
   display: flex;
   align-items: center;
-  justify-content: center;
+  justify-content: end;
   border-radius: 8px;
   width: 120px;
   flex-shrink: 0;
-}
 
-.remove-item-btn:hover{
-  background-color: #fef2f2;
 }
 
 .remove-item-btn .material-symbols-outlined{
   font-size: 18px !important;
-  color: #6b7280 !important;
-  font-variation-settings: 'FILL' 1, 'wght' 400, 'GRAD' 0, 'opsz' 24 !important;
-  display: flex !important;
-  align-items: center !important;
-  justify-content: center !important;
+ 
 }
 
 .order-form-footer{
@@ -769,6 +766,31 @@ color:#C5C5C7;
   border-width: 1.5px;
   border-color: #eeeeee;
   font-size: 12px;
+  display: grid;
+  grid-template-columns: 1fr 80px;
+  grid-template-rows: auto auto;
+  gap: 8px;
+}
+
+.order-customer-name {
+  font-weight: 500;
+  color: #111827;
+}
+
+.order-details {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+}
+
+.order-contact {
+  color: #6b7280;
+}
+
+.order-time {
+  text-align: right;
+  color: #6b7280;
+  font-size: 11px;
 }
 
 
@@ -783,30 +805,6 @@ color:#C5C5C7;
   margin-right: 5px;
 }
 
-#menu__toggle {
-  opacity: 0;
-}
-
-#menu__toggle:checked + .menu__btn > span {
-  transform: rotate(45deg);
-}
-
-#menu__toggle:checked + .menu__btn > span::before {
-  top: 0;
-  transform: rotate(0deg);
-  background-color: rgb(91, 91, 91);
-}
-
-#menu__toggle:checked + .menu__btn > span::after {
-  top: 0;
-  transform: rotate(90deg);
-  background-color: rgb(91, 91, 91);
-}
-
-#menu__toggle:checked ~ .menu__box {
-  left: 0 !important;
-}
-
 .menu__btn {
   position: relative;
   top: 0;
@@ -814,7 +812,36 @@ color:#C5C5C7;
   width: 20px;
   height: 20px;
   cursor: pointer;
+  background: none;
+  border: none;
+  padding: 0;
 }
+
+.menu__btn[aria-expanded="true"] > span {
+  transform: rotate(45deg);
+}
+
+.menu__btn[aria-expanded="true"] > span::before {
+  top: 0;
+  transform: rotate(0deg);
+  background-color: rgb(91, 91, 91);
+}
+
+.menu__btn[aria-expanded="true"] > span::after {
+  top: 0;
+  transform: rotate(90deg);
+  background-color: rgb(91, 91, 91);
+}
+
+.menu__btn[aria-expanded="true"] ~ .menu__overlay {
+  opacity: 1;
+  visibility: visible;
+}
+
+.menu__btn[aria-expanded="true"] ~ .menu__box {
+  left: 0 !important;
+}
+
 
 .menu__btn > span,
 .menu__btn > span::before,
@@ -840,6 +867,19 @@ color:#C5C5C7;
 }
 
 
+.menu__overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.25s, visibility 0.25s;
+  z-index: 998;
+}
+
 .menu__box {
   display: block;
   position: fixed;
@@ -851,7 +891,7 @@ color:#C5C5C7;
   padding: 90px 10px;
   background-color: #ffffff;
   transition-duration: .25s;
-  z-index: 1;
+  z-index: 999;
 }
 
 .menu__item {
@@ -925,11 +965,28 @@ color:#C5C5C7;
   padding: 10px 0;
 }
 
-.menu__item button{
+.menu__button {
   width: 100%;
   text-align: left;
   display: flex;
   gap: 10px;
+  background: none;
+  border: none;
+  color: #3B3A3A;
+  cursor: pointer;
+  padding: 12px 8px;
+  border-radius: 8px;
+  transition: background-color 0.2s, color 0.2s;
+}
+
+.menu__button:hover {
+  background-color: #f3f4f6;
+  color: #111827;
+}
+
+.menu__button:focus {
+  outline: 2px solid #a7c957;
+  outline-offset: 2px;
 }
 
 .menu__item button span{
@@ -948,13 +1005,6 @@ color:#C5C5C7;
 }
 
 .dashboard-menu-grid div span{
-  color:#3B3A3A;
-}
-
-.order-form-exit{
-  position: absolute;
-  top: 10px;
-  right: 35px;
   color:#3B3A3A;
 }
 
