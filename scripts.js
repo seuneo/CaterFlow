@@ -437,6 +437,9 @@ function setupEventListeners() {
         addOrderBtn.setAttribute('data-listener-added', 'true');
     }
     
+    // Initialize multi-step form
+    initializeMultiStepForm();
+    
     // Modal controls
     if (closeModal && !closeModal.hasAttribute('data-listener-added')) {
         closeModal.addEventListener('click', hideAddOrderModal);
@@ -449,7 +452,7 @@ function setupEventListeners() {
         saveOrderBtn.setAttribute('data-listener-added', 'true');
     }
     if (addItemBtn && !addItemBtn.hasAttribute('data-listener-added')) {
-        addItemBtn.addEventListener('click', addOrderItem);
+        addItemBtn.addEventListener('click', addItemToList);
         addItemBtn.setAttribute('data-listener-added', 'true');
     }
     
@@ -567,6 +570,9 @@ function showAddOrderModal() {
     if (addOrderModal) {
         addOrderModal.classList.remove('hidden');
         
+        // Reset form to first step
+        resetForm();
+        
         // Only reset order items if we're not editing an existing order
         if (!window.editingOrder) {
             currentOrderItems = [];
@@ -581,6 +587,7 @@ function hideAddOrderModal() {
     if (addOrderModal) addOrderModal.classList.add('hidden');
     window.editingOrder = null; // Clear editing state
     resetOrderForm();
+    resetForm(); // Reset multi-step form
 }
 
 function resetOrderForm() {
@@ -909,6 +916,169 @@ function confirmDeleteOrder() {
     }
 }
 
+// Multi-step form functionality
+let currentStep = 1;
+const totalSteps = 3;
+
+function initializeMultiStepForm() {
+    const nextBtn = document.getElementById('next-step');
+    const prevBtn = document.getElementById('prev-step');
+    const saveBtn = document.getElementById('save-order-btn');
+    const deliveryMode = document.getElementById('delivery-mode');
+    const addressGroup = document.getElementById('address-group');
+
+    // Step navigation
+    nextBtn.addEventListener('click', nextStep);
+    prevBtn.addEventListener('click', prevStep);
+    saveBtn.addEventListener('click', saveOrder);
+
+    // Show/hide delivery address based on delivery mode
+    deliveryMode.addEventListener('change', function() {
+        if (this.value === 'Delivery') {
+            addressGroup.style.display = 'block';
+        } else {
+            addressGroup.style.display = 'none';
+        }
+    });
+
+    // Initialize form
+    updateStepDisplay();
+}
+
+function nextStep() {
+    if (validateCurrentStep()) {
+        if (currentStep < totalSteps) {
+            currentStep++;
+            updateStepDisplay();
+        }
+    }
+}
+
+function prevStep() {
+    if (currentStep > 1) {
+        currentStep--;
+        updateStepDisplay();
+    }
+}
+
+function updateStepDisplay() {
+    // Update progress indicators
+    document.querySelectorAll('.progress-step').forEach((step, index) => {
+        step.classList.toggle('active', index + 1 === currentStep);
+    });
+
+    // Show/hide form steps
+    document.querySelectorAll('.form-step').forEach((step, index) => {
+        step.classList.toggle('active', index + 1 === currentStep);
+    });
+
+    // Update navigation buttons
+    const prevBtn = document.getElementById('prev-step');
+    const nextBtn = document.getElementById('next-step');
+    const saveBtn = document.getElementById('save-order-btn');
+
+    prevBtn.style.display = currentStep > 1 ? 'block' : 'none';
+    
+    if (currentStep === totalSteps) {
+        nextBtn.style.display = 'none';
+        saveBtn.style.display = 'block';
+    } else {
+        nextBtn.style.display = 'block';
+        saveBtn.style.display = 'none';
+    }
+}
+
+function validateCurrentStep() {
+    const currentStepElement = document.getElementById(`step-${currentStep}`);
+    const requiredFields = currentStepElement.querySelectorAll('input[required], select[required]');
+    
+    let isValid = true;
+    requiredFields.forEach(field => {
+        if (!field.value.trim()) {
+            field.style.borderColor = '#dc2626';
+            isValid = false;
+        } else {
+            field.style.borderColor = '#d1d5db';
+        }
+    });
+
+    return isValid;
+}
+
+function resetForm() {
+    currentStep = 1;
+    updateStepDisplay();
+    
+    // Clear all form fields
+    document.querySelectorAll('#add-order-modal input, #add-order-modal select, #add-order-modal textarea').forEach(field => {
+        field.value = '';
+        field.style.borderColor = '#d1d5db';
+    });
+    
+    // Clear items list
+    document.getElementById('order-items-list').innerHTML = '';
+    
+    // Hide delivery address
+    document.getElementById('address-group').style.display = 'none';
+}
+
+// Enhanced item management
+function addItemToList() {
+    const itemName = document.getElementById('item-name').value.trim();
+    const itemQuantity = document.getElementById('item-quantity').value;
+
+    if (!itemName || !itemQuantity) {
+        alert('Please fill in both item name and quantity');
+        return;
+    }
+
+    const itemsList = document.getElementById('order-items-list');
+    const itemId = Date.now(); // Simple ID generation
+
+    const itemRow = document.createElement('div');
+    itemRow.className = 'item-row';
+    itemRow.innerHTML = `
+        <div class="item-info">
+            <span class="item-name">${itemName}</span>
+            <span class="item-quantity">Qty: ${itemQuantity}</span>
+        </div>
+        <button type="button" class="remove-item-btn" onclick="removeItem(${itemId})">
+            <span class="material-symbols-outlined">delete</span>
+        </button>
+    `;
+    itemRow.dataset.itemId = itemId;
+
+    itemsList.appendChild(itemRow);
+
+    // Clear input fields
+    document.getElementById('item-name').value = '';
+    document.getElementById('item-quantity').value = '';
+}
+
+function removeItem(itemId) {
+    const itemRow = document.querySelector(`[data-item-id="${itemId}"]`);
+    if (itemRow) {
+        itemRow.remove();
+    }
+}
+
+function toggleDeliveryAddress() {
+    const deliveryMode = document.getElementById('delivery-mode');
+    const addressGroup = document.getElementById('address-group');
+    
+    if (deliveryMode && addressGroup) {
+        if (deliveryMode.value === 'Delivery') {
+            addressGroup.style.display = 'block';
+        } else {
+            addressGroup.style.display = 'none';
+        }
+    }
+}
+
 // Make functions globally available for onclick handlers
 window.editOrder = editOrder;
+window.addItemToList = addItemToList;
+window.removeItem = removeItem;
 window.deleteOrder = deleteOrder;
+window.hideAddOrderModal = hideAddOrderModal;
+window.toggleDeliveryAddress = toggleDeliveryAddress;

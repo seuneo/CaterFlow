@@ -21,7 +21,8 @@
                     src="caterflow.svg"
                     class="login-logo"
                 />
-                <h1 class="login-title">Sign in</h1>
+                <h2 class="login-brand">Cater Flow</h2>
+                <h1 class="login-title">Sign in to your catering orders manager</h1>
             </div>
 
             <!-- Login Form -->
@@ -49,13 +50,19 @@
                 </div>
 
                 <button type="button" id="login-btn" class="login-button">
-                    Sign in
+                    Sign In
                 </button>
             </form>
 
             <!-- Error Message -->
             <div id="login-error" class="login-error hidden">
+                <span class="material-symbols-outlined error-icon">warning</span>
                 <span id="error-message"></span>
+            </div>
+
+            <!-- Demo Text -->
+            <div class="login-demo-text">
+                Demo: Use any email and password to login
             </div>
         </div>
     </div>
@@ -137,116 +144,108 @@
 
     <!-- Add Order Modal -->
     <div id="add-order-modal" class="order-form-bg hidden">
-        <div class="order-form-box">
-            <div>
-                <button class="order-form-exit" id="close-modal">x</button>
-                <div>
-                    <div class="order-form-header">Add Order</div>
-                    <div>Customer Details</div>
-
-                    <div class="order-form-input">
-                        <div class="order-form-label">Name</div>
-                        <div>
-                            <input id="customer-name" name="name" type="text" required />
-                        </div>
+        <div class="order-form-container">
+            <!-- Header with Progress -->
+            <div class="order-form-header">
+                <button class="order-form-exit" id="close-modal" onclick="hideAddOrderModal()">
+                    <span class="material-symbols-outlined">close</span>
+                </button>
+                <h2 class="order-form-title">Add New Order</h2>
+                <div class="order-form-progress">
+                    <div class="progress-step active" data-step="1">
+                        <span class="step-number">1</span>
+                        <span class="step-label">Customer</span>
                     </div>
-
-                    <div class="order-form-input">
-                        <div class="order-form-label">Phone Number</div>
-                        <div>
-                            <input id="contact" name="contact" type="text" required />
-                        </div>
+                    <div class="progress-step" data-step="2">
+                        <span class="step-number">2</span>
+                        <span class="step-label">Details</span>
                     </div>
+                    <div class="progress-step" data-step="3">
+                        <span class="step-number">3</span>
+                        <span class="step-label">Items</span>
+                    </div>
+                </div>
+            </div>
 
-                    <div class="order-form-input">
-                        <div class="order-form-label">Date</div>
-                        <div>
-                            <div class="order-form-date">
-                                <input id="order-date" name="date" type="date" required />
+            <!-- Form Content -->
+            <div class="order-form-content">
+                <!-- Step 1: Customer Details -->
+                <div class="form-step active" id="step-1">
+                    <div class="form-section">
+                        <h3 class="section-title">Customer Information</h3>
+                        <div class="form-grid">
+                            <div class="form-group">
+                                <label class="form-label">Full Name *</label>
+                                <input id="customer-name" name="name" type="text" required class="form-input" placeholder="Enter customer name" />
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Phone Number *</label>
+                                <input id="contact" name="contact" type="tel" required class="form-input" placeholder="Enter phone number" />
                             </div>
                         </div>
                     </div>
+                </div>
 
-                    <div class="order-form-input">
-                        <div class="order-form-label">Time</div>
-                        <div>
-                            <div class="order-form-time">
-                                <input id="order-time" name="time" type="time" required />
+                <!-- Step 2: Order Details -->
+                <div class="form-step" id="step-2">
+                    <div class="form-section">
+                        <h3 class="section-title">Order Information</h3>
+                        <div class="form-grid">
+                            <div class="form-group">
+                                <label class="form-label">Date *</label>
+                                <input id="order-date" name="date" type="date" required class="form-input" />
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Time *</label>
+                                <input id="order-time" name="time" type="time" required class="form-input" />
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Delivery Mode *</label>
+                                <select id="delivery-mode" name="deliveryMode" required class="form-input" onchange="toggleDeliveryAddress()">
+                                    <option value="">Select mode</option>
+                                    <option value="Pickup">Pickup</option>
+                                    <option value="Delivery">Delivery</option>
+                                </select>
+                            </div>
+                            <div class="form-group full-width" id="address-group" style="display: none;">
+                                <label class="form-label">Delivery Address</label>
+                                <input id="delivery-address" name="deliveryAddress" type="text" class="form-input" placeholder="Enter delivery address" />
                             </div>
                         </div>
                     </div>
+                </div>
 
-                    <div class="order-form-input">
-                        <div class="order-form-label">Store</div>
-                        <div>
-                            <select id="store" name="store">
-                                <option value="suyacitycatering">Fieldgate</option>
-                                <option value="simplychopskitimat">Kitimat</option>
-                            </select>
+                <!-- Step 3: Order Items -->
+                <div class="form-step" id="step-3">
+                    <div class="form-section">
+                        <h3 class="section-title">Order Items</h3>
+                        <div class="add-item-section">
+                            <div class="add-item-form">
+                                <input id="item-name" name="item-name" placeholder="Item name" class="form-input" />
+                                <input id="item-quantity" name="item-quantity" type="number" placeholder="Qty" min="1" max="500" class="form-input" />
+                                <button type="button" class="add-item-btn" id="add-item-btn" onclick="addItemToList()">
+                                    <span class="material-symbols-outlined">add</span>
+                                    Add Item
+                                </button>
+                            </div>
                         </div>
-                    </div>
-
-                    <div class="order-form-input">
-                        <div class="order-form-label">Delivery Mode</div>
-                        <div>
-                            <select id="delivery-mode" name="deliveryMode">
-                                <option value="Pickup">Pickup</option>
-                                <option value="Delivery">Delivery</option>
-                            </select>
+                        <div class="items-list" id="order-items-list">
+                            <!-- Order items will be added here -->
                         </div>
-                    </div>
-
-                    <div class="order-form-input">
-                        <div class="order-form-label">Delivery Address</div>
-                        <div>
-                            <input id="delivery-address" name="deliveryAddress" type="text" />
-                        </div>
-                    </div>
-
-                    <div class="order-form-input">
-                        <div class="order-form-label">Payment Status</div>
-                        <div>
-                            <select id="payment-status" name="paymentStatus">
-                                <option value="Not Paid">Not Paid</option>
-                                <option value="Paid">Paid</option>
-                            </select>
+                        <div class="form-group">
+                            <label class="form-label">Special Notes</label>
+                            <textarea id="notes" name="notes" rows="3" class="form-input" placeholder="Any special instructions or notes..."></textarea>
                         </div>
                     </div>
                 </div>
+            </div>
 
-                <div class="order-form-header">Order Items</div>
-
-                <div>
-                    <div class="order-form-order-list-add-header">
-                        <div>Name</div>
-                        <div>Quantity</div>
-                        <div></div>
-                    </div>
-                </div>
-
-                <div class="order-form-order-list-add-inputs">
-                    <input id="item-name" name="item-name" placeholder="Item name" />
-                    <input id="item-quantity" name="item-quantity" type="number" placeholder="Qty" min="0" max="500" />
-                    <button class="order-form-order-list-add-item-button" id="add-item-btn">Add Item</button>
-                </div>
-
-                <div class="order-form-order-list-header">
-                    <div>Item</div>
-                    <div>Quantity</div>
-                </div>
-
-                <div id="order-items-list">
-                    <!-- Order items will be added here -->
-                </div>
-
-                <div class="order-form-input">
-                    <div class="order-form-label">Notes</div>
-                    <div>
-                        <textarea id="notes" name="notes" rows="3" cols="30" placeholder="Additional notes..."></textarea>
-                    </div>
-                </div>
-
-                <button class="order-form-save" id="save-order-btn">Add order</button>
+            <!-- Footer with Navigation -->
+            <div class="order-form-footer">
+                <button type="button" class="btn-secondary" id="prev-step" style="display: none;">Previous</button>
+                <div class="footer-spacer"></div>
+                <button type="button" class="btn-primary" id="next-step">Next</button>
+                <button type="button" class="btn-primary" id="save-order-btn" style="display: none;">Create Order</button>
             </div>
         </div>
     </div>
