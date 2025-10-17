@@ -924,10 +924,8 @@ function editOrder(orderId) {
             itemRow.className = 'item-row';
             const itemId = Date.now() + Math.random(); // Simple ID generation
             itemRow.innerHTML = `
-                <div class="item-info">
-                    <span class="item-name">${item.name}</span>
-                    <span class="item-quantity">Qty: ${item.quantity}</span>
-                </div>
+                <div class="item-name">${item.name}</div>
+                <div class="item-quantity">${item.quantity}</div>
                 <button type="button" class="remove-item-btn" onclick="removeItem(${itemId})">
                     <span class="material-symbols-outlined">delete</span>
                 </button>
@@ -1016,10 +1014,8 @@ function addItemToList() {
     const itemRow = document.createElement('div');
     itemRow.className = 'item-row';
     itemRow.innerHTML = `
-        <div class="item-info">
-            <span class="item-name">${itemName}</span>
-            <span class="item-quantity">Qty: ${itemQuantity}</span>
-        </div>
+        <div class="item-name">${itemName}</div>
+        <div class="item-quantity">${itemQuantity}</div>
         <button type="button" class="remove-item-btn" onclick="removeItem(${itemId})">
             <span class="material-symbols-outlined">delete</span>
         </button>
