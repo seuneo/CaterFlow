@@ -197,15 +197,14 @@ body{
 
 .order-list-buttons {
   display: flex;
-  gap: 2px;
+  gap: 5px;
   align-items: center;
   justify-content: flex-end;
   width: 100%;
 }
 
 .order-list-buttons button {
-  background: none;
-  border: none;
+  
   cursor: pointer;
   padding: 2px;
   border-radius: 4px;
@@ -225,12 +224,8 @@ body{
   font-size: 15px;
 }
 
-.order-info-edit{
-  margin-right: 18px;
-}
-
 .order-info-edit span{
-  color: rgb(69, 69, 69);
+  color: #3B3A3A;
   display: flex;
 }
 
@@ -242,7 +237,7 @@ body{
 .order-info-status{
   font-size: 12px;
   font-weight: 600;
-  background-color: #e2e2e2;
+  background-color: #d1d5db;
   color: rgb(255, 255, 255);
   padding: 0 5px;
   margin: 0 5px;
@@ -319,7 +314,7 @@ body{
 
 .day-num-past-order-true{
   color: #ffffff;
-  background-color:#e2e2e2;
+  background-color:#d1d5db;
 }
 
 .day-num-order-true{
@@ -340,7 +335,7 @@ body{
 }
 
 .day-num:hover, .day-num-order-true:hover, .day-num-today:hover, .day-num-today-order-true:hover, .day-num-past-order-true:hover, .day-num-past:hover{
-  background-color: #F7F7F7;
+  background-color: #f3f4f6
 }
 
 .day-num-past-order-true:hover{
@@ -769,7 +764,7 @@ color:#C5C5C7;
   display: grid;
   grid-template-columns: 1fr 80px;
   grid-template-rows: auto auto;
-  gap: 8px;
+  
 }
 
 .order-customer-name {
@@ -779,7 +774,7 @@ color:#C5C5C7;
 
 .order-details {
   display: flex;
-  gap: 12px;
+  gap:5px;
   align-items: center;
 }
 
@@ -840,6 +835,11 @@ color:#C5C5C7;
 
 .menu__btn[aria-expanded="true"] ~ .menu__box {
   left: 0 !important;
+}
+
+/* Hide add order button when menu is open */
+body.menu-open .add-order-button {
+  display: none;
 }
 
 

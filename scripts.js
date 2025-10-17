@@ -484,10 +484,12 @@ function setupEventListeners() {
             // Menu opened
             menuToggle.setAttribute('aria-expanded', 'true');
             document.body.style.overflow = 'hidden';
+            document.body.classList.add('menu-open');
         } else {
             // Menu closed
             menuToggle.setAttribute('aria-expanded', 'false');
             document.body.style.overflow = '';
+            document.body.classList.remove('menu-open');
         }
     }
     
@@ -496,6 +498,7 @@ function setupEventListeners() {
             isMenuOpen = false;
             menuToggle.setAttribute('aria-expanded', 'false');
             document.body.style.overflow = '';
+            document.body.classList.remove('menu-open');
         }
     }
     
