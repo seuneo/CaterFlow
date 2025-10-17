@@ -1,3 +1,6 @@
 /kitchen/node_modules
 /management/node_modules
 /delivery/node_modules
+/.env
+/kitchen/.env
+/management/.env
