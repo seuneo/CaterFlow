@@ -174,6 +174,22 @@ const mockOrders = [
     },
     {
         _id: 13,
+        name: "Michael Chen",
+        contact: "+1-555-3456",
+        date: new Date(2025, 9, 26, 14, 30), // October 26, 2025, 2:30 PM
+        deliveryMode: "Pickup",
+        status: "Pending",
+        orderList: [
+            { name: "Chicken Teriyaki Bowl", quantity: "2" },
+            { name: "Miso Soup", quantity: "1" },
+            { name: "Edamame", quantity: "1" }
+        ],
+        notes: "No onions in the teriyaki bowl",
+        store: "suyacitycatering",
+        paymentStatus: "Not Paid"
+    },
+    {
+        _id: 14,
         name: "Kevin Thompson",
         contact: "+1-555-6789",
         date: new Date(2025, 9, 27, 14, 20), // October 27, 2025, 2:20 PM
@@ -188,7 +204,7 @@ const mockOrders = [
         paymentStatus: "Paid"
     },
     {
-        _id: 14,
+        _id: 15,
         name: "Sarah Williams",
         contact: "+1-555-0123",
         date: new Date(2025, 9, 28, 11, 45), // October 28, 2025, 11:45 AM
@@ -204,7 +220,7 @@ const mockOrders = [
         paymentStatus: "Not Paid"
     },
     {
-        _id: 15,
+        _id: 16,
         name: "Daniel Kim",
         contact: "+1-555-4567",
         date: new Date(2025, 10, 29, 16, 0), // November 29, 2025, 4:00 PM
@@ -216,7 +232,7 @@ const mockOrders = [
         ]
     },
     {
-        _id: 16,
+        _id: 17,
         name: "Alex Thompson",
         contact: "+1-555-1111",
         date: new Date(2025, 8, 5, 12, 30), // September 5, 2025, 12:30 PM
@@ -231,7 +247,7 @@ const mockOrders = [
         paymentStatus: "Paid"
     },
     {
-        _id: 17,
+        _id: 18,
         name: "Rachel Green",
         contact: "+1-555-2222",
         date: new Date(2025, 8, 12, 15, 45), // September 12, 2025, 3:45 PM
@@ -247,7 +263,7 @@ const mockOrders = [
         paymentStatus: "Not Paid"
     },
     {
-        _id: 18,
+        _id: 19,
         name: "Tom Wilson",
         contact: "+1-555-3333",
         date: new Date(2025, 10, 2, 11, 15), // November 2, 2025, 11:15 AM
@@ -262,7 +278,7 @@ const mockOrders = [
         paymentStatus: "Paid"
     },
     {
-        _id: 19,
+        _id: 20,
         name: "Lisa Park",
         contact: "+1-555-4444",
         date: new Date(2025, 10, 8, 14, 0), // November 8, 2025, 2:00 PM
@@ -628,6 +644,9 @@ function showAddOrderModal() {
             renderOrderItems();
             setDefaultDate();
         }
+        
+        // Setup real-time validation
+        setupRealTimeValidation();
     }
 }
 
@@ -636,6 +655,9 @@ function hideAddOrderModal() {
     
     // Restore body scroll when modal is closed
     document.body.style.overflow = '';
+    
+    // Clear all validation states
+    clearValidationStates();
     
     window.editingOrder = null; // Clear editing state
     resetOrderForm();
@@ -702,9 +724,38 @@ function handleAddOrder() {
     const deliveryAddress = document.getElementById('delivery-address').value.trim();
     const notes = document.getElementById('notes').value.trim();
     
-    // Validate required fields
-    if (!customerName || !contact || !orderDate || !orderTime || !deliveryMode) {
-        alert('Please fill in all required fields');
+    // Clear previous validation states
+    clearValidationStates();
+    
+    // Validate required fields with better feedback
+    let hasErrors = false;
+    
+    if (!customerName) {
+        showFieldError('customer-name', 'Customer name is required');
+        hasErrors = true;
+    }
+    
+    if (!contact) {
+        showFieldError('contact', 'Phone number is required');
+        hasErrors = true;
+    }
+    
+    if (!orderDate) {
+        showFieldError('order-date', 'Date is required');
+        hasErrors = true;
+    }
+    
+    if (!orderTime) {
+        showFieldError('order-time', 'Time is required');
+        hasErrors = true;
+    }
+    
+    if (!deliveryMode) {
+        showFieldError('delivery-mode', 'Delivery mode is required');
+        hasErrors = true;
+    }
+    
+    if (hasErrors) {
         return;
     }
     
@@ -761,6 +812,7 @@ function handleAddOrder() {
     hideAddOrderModal();
     renderCalendar();
     renderOrders();
+    alert('Order saved successfully!');
 }
 
 function navigateMonth(direction) {
@@ -1045,6 +1097,9 @@ function resetForm() {
     
     // Hide delivery address
     document.getElementById('address-group').style.display = 'none';
+    
+    // Clear all validation states and error messages
+    clearValidationStates();
 }
 
 // Enhanced item management
@@ -1112,6 +1167,74 @@ function toggleDeliveryAddress() {
     }
 }
 
+
+// Validation helper functions
+function clearValidationStates() {
+    const inputs = document.querySelectorAll('.form-input');
+    inputs.forEach(input => {
+        input.classList.remove('error', 'success');
+        // Remove error messages
+        const errorMsg = input.parentNode.querySelector('.field-error');
+        if (errorMsg) {
+            errorMsg.remove();
+        }
+    });
+}
+
+function setupRealTimeValidation() {
+    const formInputs = document.querySelectorAll('#add-order-form .form-input');
+    formInputs.forEach(input => {
+        input.addEventListener('input', function() {
+            // Clear error state when user starts typing
+            if (this.classList.contains('error')) {
+                this.classList.remove('error');
+                const errorMsg = this.parentNode.querySelector('.field-error');
+                if (errorMsg) {
+                    errorMsg.remove();
+                }
+            }
+            
+            // Add success state for valid fields
+            if (this.value.trim() !== '') {
+                this.classList.add('success');
+            } else {
+                this.classList.remove('success');
+            }
+        });
+    });
+}
+
+function showFieldError(fieldId, message) {
+    const field = document.getElementById(fieldId);
+    if (field) {
+        field.classList.add('error');
+        field.classList.remove('success');
+        
+        // Show error message
+        let errorMsg = field.parentNode.querySelector('.field-error');
+        if (!errorMsg) {
+            errorMsg = document.createElement('div');
+            errorMsg.className = 'field-error';
+            errorMsg.style.cssText = 'color: #dc2626; font-size: 12px; margin-top: 4px;';
+            field.parentNode.appendChild(errorMsg);
+        }
+        errorMsg.textContent = message;
+    }
+}
+
+function showFieldSuccess(fieldId) {
+    const field = document.getElementById(fieldId);
+    if (field) {
+        field.classList.add('success');
+        field.classList.remove('error');
+        
+        // Remove error message if exists
+        const errorMsg = field.parentNode.querySelector('.field-error');
+        if (errorMsg) {
+            errorMsg.remove();
+        }
+    }
+}
 
 // Make functions globally available for onclick handlers
 window.editOrder = editOrder;
