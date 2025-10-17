@@ -502,10 +502,22 @@ function setupEventListeners() {
         }
     }
     
-    // Toggle menu when button is clicked
-    if (menuToggle) {
-        menuToggle.addEventListener('click', toggleMenu);
-    }
+        // Toggle menu when button is clicked
+        if (menuToggle) {
+            menuToggle.addEventListener('click', toggleMenu);
+        }
+        
+        // Close menu when clicking menu items (except logout)
+        const menuItems = document.querySelectorAll('.menu__button:not(#logout-btn)');
+        menuItems.forEach(item => {
+            item.addEventListener('click', () => {
+                setTimeout(() => {
+                    if (isMenuOpen) {
+                        closeMenu();
+                    }
+                }, 100); // Small delay to allow the action to complete
+            });
+        });
     
     // Close menu when clicking overlay
     if (menuOverlay) {
@@ -1108,3 +1120,4 @@ window.removeItem = removeItem;
 window.deleteOrder = deleteOrder;
 window.hideAddOrderModal = hideAddOrderModal;
 window.toggleDeliveryAddress = toggleDeliveryAddress;
+window.showAddOrderModal = showAddOrderModal;

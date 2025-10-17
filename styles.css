@@ -9,10 +9,6 @@ body{
   --font-sans--font-feature-settings: 'cv02', 'cv03', 'cv04', 'cv11';
 }
 
-
-
-
-/* Clean Minimal Login Styles - Square/Apple/Uber inspired */
 .login-screen {
   min-height: 100vh;
   background: #ffffff;
@@ -92,7 +88,7 @@ body{
 }
 
 .login-button {
-  background: #000000E6;
+  background: #16a34a;
   color: white;
   border: none;
   padding: 12px 16px;
@@ -105,11 +101,11 @@ body{
 }
 
 .login-button:hover {
-  background: #333333;
+  background: #15803d;
 }
 
 .login-button:active {
-  background: #000000;
+  background: #166534;
 }
 
 .login-error {
@@ -160,9 +156,6 @@ body{
   }
 }
 
-.dashboard{
-}
-
 .dashboard-home{
   display: grid;
   grid-template-rows: repeat(2,auto);
@@ -184,7 +177,7 @@ body{
 }
 
 .add-order-button button{
-  background-color:#a7c957;
+  background-color:#16a34a;
   color: white;
   padding: 8px 15px;
   border-radius: 20px;
@@ -319,19 +312,19 @@ body{
 
 .day-num-order-true{
   color: white;
-  background-color:#a7c957;
+  background-color:#16a34a;
 }
 
 .day-num-today-order-true{
   color: white;
-  background-color:#a7c957;
+  background-color:#16a34a;
 }
 
 .day-num-today{
-  color:#a7c957;
+  color:#16a34a;
   border-style: solid;
   border-width: 1.5px;
-  border-color:#a7c957;
+  border-color:#16a34a;
 }
 
 .day-num:hover, .day-num-order-true:hover, .day-num-today:hover, .day-num-today-order-true:hover, .day-num-past-order-true:hover, .day-num-past:hover{
@@ -339,18 +332,19 @@ body{
 }
 
 .day-num-past-order-true:hover{
-  color:#bfd194;
+  color:#16a34a;
 }
 
 .day-num-order-true:hover{
-  color:#a7c957;
+  color:#16a34a;
 }
 
 .day-num-today-order-true:hover{
-  color:#a7c957;
+  color:#16a34a;
 }
 
 .day-num-today:hover{
+  color:#16a34a;
 }
 
 .day-num-selected{
@@ -607,7 +601,7 @@ color: white;
 
 .add-item-btn{
   background-color: transparent;
-  color: #a7c957;
+  color: #16a34a;
   border: none;
   padding: 8px 12px;
   border-radius: 8px;
@@ -616,6 +610,7 @@ color: white;
   cursor: pointer;
   display: flex;
   align-items: center;
+  justify-content: center;
   gap: 8px;
   transition: background-color 0.2s;
   white-space: nowrap;
@@ -624,7 +619,7 @@ color: white;
 }
 
 .add-item-btn:hover{
-  background-color: #a7c957;
+  background-color: #16a34a;
   color: white;
 }
 
@@ -699,7 +694,7 @@ color: white;
 
 
 .btn-primary{
-  background-color: #a7c957;
+  background-color: #16a34a;
   color: white;
   border: none;
   padding: 8px 12px;
@@ -711,7 +706,7 @@ color: white;
 }
 
 .btn-primary:hover{
-  background-color: #000000;
+  background-color: #15803d;
 }
 
 
@@ -835,6 +830,18 @@ color:#C5C5C7;
 
 .menu__btn[aria-expanded="true"] ~ .menu__box {
   left: 0 !important;
+  animation: slideInLeft 0.25s ease-out;
+}
+
+@keyframes slideInLeft {
+  from {
+    left: -100%;
+    opacity: 0;
+  }
+  to {
+    left: 0;
+    opacity: 1;
+  }
 }
 
 /* Hide add order button when menu is open */
@@ -885,13 +892,15 @@ body.menu-open .add-order-button {
   position: fixed;
   top: 0;
   left: -100%;
-  width: 250px;
+  width: 280px;
   height: 100%;
   margin: 0;
-  padding: 90px 10px;
+  padding: 80px 0;
   background-color: #ffffff;
   transition-duration: .25s;
+  box-shadow: 4px 0 20px rgba(0,0,0,0.15);
   z-index: 999;
+  border-right: 1px solid #e5e7eb;
 }
 
 .menu__item {
@@ -943,65 +952,100 @@ body.menu-open .add-order-button {
 
 .dashboard-menu-box-header{
   display: flex;
-  gap: 10px;
+  gap: 12px;
   align-items: center;
   flex-direction: column;
-  font-weight: 550;
-  font-size: 14px;
-  color:#3B3A3A;
+  font-weight: 600;
+  font-size: 16px;
+  color: #111827;
+  padding: 20px 24px;
+  border-bottom: 1px solid #e5e7eb;
+  margin-bottom: 16px;
 }
 
 .dashboard-menu-box-user{
-  margin-top: 25px;
   display: flex;
-  padding: 10px 0;
+  padding: 16px 24px;
   font-size: 14px;
-  gap: 5px;
+  gap: 8px;
   align-items: center;
+  background-color: #f9fafb;
+  margin: 0 20px 20px 20px;
+  border-radius: 8px;
+  border: 1px solid #e5e7eb;
 }
 
 .menu__item{
-  margin-bottom: 10px;
-  padding: 10px 0;
+  margin: 0 20px 4px 20px;
+  padding: 0;
+}
+
+.menu__item:first-of-type {
+  margin-top: 8px;
+}
+
+.menu__item:last-of-type {
+  margin-top: 16px;
+  padding-top: 16px;
+  border-top: 1px solid #e5e7eb;
 }
 
 .menu__button {
   width: 100%;
   text-align: left;
   display: flex;
-  gap: 10px;
+  gap: 12px;
   background: none;
   border: none;
-  color: #3B3A3A;
+  color: #374151;
   cursor: pointer;
-  padding: 12px 8px;
+  padding: 14px 16px;
   border-radius: 8px;
-  transition: background-color 0.2s, color 0.2s;
+  font-size: 14px;
+  font-weight: 500;
+  transition: all 0.2s ease;
+  align-items: center;
+  min-height: 48px;
 }
 
 .menu__button:hover {
   background-color: #f3f4f6;
   color: #111827;
+  transform: translateX(2px);
 }
 
 .menu__button:focus {
-  outline: 2px solid #a7c957;
+  outline: 2px solid #16a34a;
   outline-offset: 2px;
+  background-color: #f0fdf4;
+}
+
+.menu__button:active {
+  background-color: #e5e7eb;
+  transform: translateX(1px);
 }
 
 .menu__item button span{
   font-size: 20px;
+  color: #6b7280;
+  transition: color 0.2s ease;
+}
+
+.menu__button:hover span {
+  color: #374151;
 }
 
 .dashboard-menu-grid{
   display: grid;
-  grid-template-columns: 25px auto;
-  gap: 10px;
+  grid-template-columns: 24px auto;
+  gap: 12px;
+  align-items: center;
 }
 
 .dashboard-menu-grid > :nth-child(1) {
   display: flex;
-  justify-content: end;
+  justify-content: center;
+  align-items: center;
 }
 
 .dashboard-menu-grid div span{
@@ -1011,18 +1055,4 @@ body.menu-open .add-order-button {
 /* Utility classes for JavaScript */
 .hidden {
   display: none !important;
-}
-
-
-/* Login form input styling */
-.login input {
-  border: 1px solid #d1d5db !important;
-  outline: 1px solid #d1d5db !important;
-  outline-offset: -1px !important;
-}
-
-.login input:focus {
-  outline: 2px solid #84cc16 !important;
-  outline-offset: -2px !important;
-  border-color: #84cc16 !important;
 }
