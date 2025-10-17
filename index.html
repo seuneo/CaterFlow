@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CaterFlow</title>
+    <link rel="icon" type="image/svg+xml" href="caterflow-white.svg">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <!-- Login Screen -->
+    <div id="login-screen" class="login-screen">
+        <div class="login-container">
+            <!-- Logo -->
+            <div class="login-header">
+                <img
+                    alt="CaterFlow"
+                    src="caterflow.svg"
+                    class="login-logo"
+                />
+                <h1 class="login-title">Sign in</h1>
+            </div>
+
+            <!-- Login Form -->
+            <form id="login-form" class="login-form">
+                <div class="form-group">
+                    <input 
+                        id="username"
+                        name="username"
+                        type="text"                               
+                        required
+                        placeholder="Username"
+                        class="form-input"
+                    />
+                </div>
+
+                <div class="form-group">
+                    <input
+                        id="password"
+                        name="password"
+                        type="password"
+                        required
+                        placeholder="Password"
+                        class="form-input"
+                    />
+                </div>
+
+                <button type="button" id="login-btn" class="login-button">
+                    Sign in
+                </button>
+            </form>
+
+            <!-- Error Message -->
+            <div id="login-error" class="login-error hidden">
+                <span id="error-message"></span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Dashboard Screen (Management) -->
+    <div id="dashboard-screen" class="dashboard flex justify-center hidden">
+        <!-- Header -->
+        <div class="dashboard-nav-header">
+            <div class="dashboard-nav-title">
+                <div class="dashboard-logo">
+                    <img id="caterflow-logo" src="caterflow-black.svg" alt="CaterFlow logo">
+                </div>
+                <div id="dashboard-title">Catering Orders</div>
+            </div>
+            <div class="hamburger-menu">
+                <input type="checkbox" id="menu__toggle">
+                <label class="menu__btn" for="menu__toggle">
+                    <span></span>
+                </label>
+                <div class="menu__box">
+                    <div class="dashboard-menu-box-header">
+                        <div class="dashboard-menu-box-logo">
+                            <img id="caterflow-logo" src="caterflow.svg" alt="CaterFlow logo">
+                        </div>
+                        <div>CATERFLOW</div>
+                    </div>
+                    <div class="dashboard-menu-box-user dashboard-menu-grid">
+                        <span class="material-symbols-outlined">person</span>
+                        <div class="dashboard-name" id="user-greeting">Hello, User</div>
+                    </div>
+                    <div class="menu__item">
+                        <button id="logout-btn" class="dashboard-menu-grid">
+                            <span class="material-symbols-outlined">logout</span>
+                            <div>Log out</div>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Add Order Button -->
+        <div id="add-order-button" class="add-order-button">
+            <button id="add-order-btn">Add Order +</button>
+        </div>
+
+        <!-- Main Dashboard Content -->
+        <div class="dashboard-home">
+            <!-- Calendar Section -->
+            <div class="calendar-month-view">
+                <!-- Calendar Navigation -->
+                <div class="calendar-nav">
+                    <button class="arrowButton" id="prev-month">
+                        <span class="material-symbols-outlined">arrow_back_ios</span>
+                    </button>
+                    <div></div>
+                    <div></div>
+                    <button class="month-year" id="current-month">January</button>
+                    <div></div>
+                    <div></div>
+                    <button class="arrowButton" id="next-month">
+                        <span class="material-symbols-outlined">arrow_forward_ios</span>
+                    </button>
+                </div>
+
+                <!-- Calendar Grid -->
+                <div class="calendar" id="calendar">
+                    <!-- Calendar will be generated by JavaScript -->
+                </div>
+            </div>
+
+            <!-- Orders List -->
+            <div id="orders-section">
+                <div id="orders-list" class="past-orders-list">
+                    <!-- Orders will be populated by JavaScript -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Add Order Modal -->
+    <div id="add-order-modal" class="order-form-bg hidden">
+        <div class="order-form-box">
+            <div>
+                <button class="order-form-exit" id="close-modal">x</button>
+                <div>
+                    <div class="order-form-header">Add Order</div>
+                    <div>Customer Details</div>
+
+                    <div class="order-form-input">
+                        <div class="order-form-label">Name</div>
+                        <div>
+                            <input id="customer-name" name="name" type="text" required />
+                        </div>
+                    </div>
+
+                    <div class="order-form-input">
+                        <div class="order-form-label">Phone Number</div>
+                        <div>
+                            <input id="contact" name="contact" type="text" required />
+                        </div>
+                    </div>
+
+                    <div class="order-form-input">
+                        <div class="order-form-label">Date</div>
+                        <div>
+                            <div class="order-form-date">
+                                <input id="order-date" name="date" type="date" required />
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="order-form-input">
+                        <div class="order-form-label">Time</div>
+                        <div>
+                            <div class="order-form-time">
+                                <input id="order-time" name="time" type="time" required />
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="order-form-input">
+                        <div class="order-form-label">Store</div>
+                        <div>
+                            <select id="store" name="store">
+                                <option value="suyacitycatering">Fieldgate</option>
+                                <option value="simplychopskitimat">Kitimat</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="order-form-input">
+                        <div class="order-form-label">Delivery Mode</div>
+                        <div>
+                            <select id="delivery-mode" name="deliveryMode">
+                                <option value="Pickup">Pickup</option>
+                                <option value="Delivery">Delivery</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="order-form-input">
+                        <div class="order-form-label">Delivery Address</div>
+                        <div>
+                            <input id="delivery-address" name="deliveryAddress" type="text" />
+                        </div>
+                    </div>
+
+                    <div class="order-form-input">
+                        <div class="order-form-label">Payment Status</div>
+                        <div>
+                            <select id="payment-status" name="paymentStatus">
+                                <option value="Not Paid">Not Paid</option>
+                                <option value="Paid">Paid</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="order-form-header">Order Items</div>
+
+                <div>
+                    <div class="order-form-order-list-add-header">
+                        <div>Name</div>
+                        <div>Quantity</div>
+                        <div></div>
+                    </div>
+                </div>
+
+                <div class="order-form-order-list-add-inputs">
+                    <input id="item-name" name="item-name" placeholder="Item name" />
+                    <input id="item-quantity" name="item-quantity" type="number" placeholder="Qty" min="0" max="500" />
+                    <button class="order-form-order-list-add-item-button" id="add-item-btn">Add Item</button>
+                </div>
+
+                <div class="order-form-order-list-header">
+                    <div>Item</div>
+                    <div>Quantity</div>
+                </div>
+
+                <div id="order-items-list">
+                    <!-- Order items will be added here -->
+                </div>
+
+                <div class="order-form-input">
+                    <div class="order-form-label">Notes</div>
+                    <div>
+                        <textarea id="notes" name="notes" rows="3" cols="30" placeholder="Additional notes..."></textarea>
+                    </div>
+                </div>
+
+                <button class="order-form-save" id="save-order-btn">Add order</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Confirm Delete Modal -->
+    <div id="confirm-delete-modal" class="order-confirm-delete-bg hidden">
+        <div class="order-confirm-delete-box">
+            <button class="order-confirm-delete-box-close" id="close-delete-modal">x</button>
+            <div class="order-confirm-delete-box-message">
+                Are you sure you want to delete this order?
+            </div>
+            <div class="order-confirm-delete-box-buttons">
+                <button class="order-confirm-delete-box-no" id="cancel-delete">No</button>
+                <button class="order-confirm-delete-box-yes" id="confirm-delete">Yes</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="scripts.js"></script>
+</body>
+</html>
