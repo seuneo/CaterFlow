@@ -7,12 +7,7 @@ const orderSchema = new mongoose.Schema({
     },
     store:{
         type: String,
-        enum: ["suyacitycatering", "simplychopskitimat"],
         required: true
-    },
-    type:{
-        type: String,
-        enum: ["catering", "storetostore"],
     },
     status:{
         type: String,
