@@ -44,7 +44,7 @@ export default function Delivery({orders, setOrders}: {orders: Order[], setOrder
     }
 
     const TabItems = [
-        {value: "In Kitchen", label: "In Kitchen", amount: orders.filter(order => order.date.toDateString() === selectedDate.toDateString() && (order.status === "Ordered" || order.status === "In Progress" || order.status === "Received")).length},
+        {value: "In Kitchen", label: "In Kitchen", amount: orders.filter(order => order.date.toDateString() === selectedDate.toDateString() && (order.status === "Pending" || order.status === "In Progress" || order.status === "Received")).length},
         {value: "Ready for Delivery", label: "Ready for Delivery", amount: orders.filter(order => order.date.toDateString() === selectedDate.toDateString() && order.status === "Completed").length},
         {value: "In Transit", label: "In Transit", amount: orders.filter(order => order.date.toDateString() === selectedDate.toDateString() && order.status === "In Transit").length},
         {value: "Delivered", label: "Delivered", amount: orders.filter(order => order.date.toDateString() === selectedDate.toDateString() && order.status === "Delivered").length}
@@ -56,7 +56,7 @@ export default function Delivery({orders, setOrders}: {orders: Order[], setOrder
     <Calendar orders={orders} changeDate={changeDate}/>
 
     <div className="flex w-full max-w-sm flex-col gap-6">
-      <Tabs defaultValue="Ordered">
+      <Tabs defaultValue="Ready for Delivery">
         <TabsList>
           {TabItems.map((item) => (
             <TabsTrigger key={item.value} value={item.value}>{item.label} {" "} <span className="text-muted-foreground text-xs">{item.amount}</span></TabsTrigger>

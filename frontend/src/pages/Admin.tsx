@@ -1,7 +1,14 @@
 import Calendar from "@/pages/Calendar"
 import OrderPage from "@/pages/OrderPage"
 import {useState} from "react"
-
+import {
+    Card,
+    CardContent,
+    CardDescription,
+    CardFooter,
+    CardHeader,
+    CardTitle,
+  } from "@/components/ui/card"
 interface Order {
   _id: number;
   name: string;
@@ -27,9 +34,18 @@ export default function Admin({orders, setOrders}: {orders: Order[], setOrders: 
 
     return <div className="flex flex-1 flex-col gap-4 p-4">
     <Calendar orders={orders} changeDate={changeDate}/>
-    <div>{orders.length} orders</div>
+    <Card>
+        <CardHeader>
+            <CardTitle>{selectedDate.toLocaleDateString()}</CardTitle>
+            <CardDescription>{orders.filter(order => order.date.toDateString() === selectedDate.toDateString()).length} orders</CardDescription>
+        </CardHeader>
+        <CardContent>
+            <OrderPage orders={orders.filter(order => order.date.toDateString() === selectedDate.toDateString())} setOrders={setOrders}/>
+            </CardContent>
 
-    <OrderPage orders={orders} setOrders={setOrders}/>
+    </Card>
+
+    
     
       
     </div>

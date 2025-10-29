@@ -44,7 +44,7 @@ export default function Kitchen({orders, setOrders}: {orders: Order[], setOrders
     }
 
     const TabItems = [
-        {value: "Ordered", label: "Ordered", amount: orders.filter(order => order.date.toDateString() === selectedDate.toDateString() && order.status === "Ordered").length},
+        {value: "Pending", label: "Pending", amount: orders.filter(order => order.date.toDateString() === selectedDate.toDateString() && order.status === "Pending").length},
         {value: "Received", label: "Received", amount: orders.filter(order => order.date.toDateString() === selectedDate.toDateString() && order.status === "Received").length},
         {value: "In Progress", label: "In Progress", amount: orders.filter(order => order.date.toDateString() === selectedDate.toDateString() && order.status === "In Progress").length},
         {value: "Completed", label: "Completed", amount: orders.filter(order => order.date.toDateString() === selectedDate.toDateString() && order.status === "Completed").length}
@@ -56,7 +56,7 @@ export default function Kitchen({orders, setOrders}: {orders: Order[], setOrders
     <Calendar orders={orders} changeDate={changeDate}/>
 
     <div className="flex w-full max-w-sm flex-col gap-6">
-      <Tabs defaultValue="Ordered">
+      <Tabs defaultValue="Received">
         <TabsList>
           {TabItems.map((item) => (
             <TabsTrigger key={item.value} value={item.value}>{item.label} {" "} <span className="text-muted-foreground text-xs">{item.amount}</span></TabsTrigger>
