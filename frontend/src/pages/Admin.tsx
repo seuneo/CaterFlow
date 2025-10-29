@@ -32,9 +32,14 @@ export default function Admin({orders, setOrders}: {orders: Order[], setOrders: 
         setSelectedDate(date)
     }
 
-    return <div className="flex flex-1 flex-col gap-4 p-4">
+    return <div className="flex flex-wrap gap-4 p-4 w-full">
+    <div className="flex-[1_1_300px] mx-auto sm:mx-0">
+  <div className="flex justify-center">
     <Calendar orders={orders} changeDate={changeDate}/>
-    <Card>
+  </div>
+</div>
+    <div className="flex-[1_1_350px]">
+      <Card>
         <CardHeader>
             <CardTitle>{selectedDate.toLocaleDateString()}</CardTitle>
             <CardDescription>{orders.filter(order => order.date.toDateString() === selectedDate.toDateString()).length} orders</CardDescription>
@@ -43,7 +48,9 @@ export default function Admin({orders, setOrders}: {orders: Order[], setOrders: 
             <OrderPage orders={orders.filter(order => order.date.toDateString() === selectedDate.toDateString())} setOrders={setOrders}/>
             </CardContent>
 
-    </Card>
+    </Card>  
+    </div>
+    
 
     
     
