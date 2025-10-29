@@ -18,24 +18,48 @@ import {
   TabsTrigger,
 } from "@/components/ui/tabs"
 
+import { useState } from "react"
 
-export default function Kitchen({orders, setOrders}: any) {  
+interface Order {
+  _id: number;
+  name: string;
+  contact: string;
+  date: Date;
+  time: string;
+  deliveryMode: string;
+  deliveryAddress?: string;
+  status: string;
+  orderList: { name: string; quantity: number | string }[];
+  notes?: string;
+  paymentStatus?: string;
+}
+
+export default function Kitchen({orders, setOrders}: {orders: Order[], setOrders: (orders: Order[]) => void | undefined}) {  
     
+    
+    const [selectedDate, setSelectedDate] = useState<Date>(new Date())
+
+    const changeDate = (date: Date) => {
+        setSelectedDate(date)
+    }
+
     const TabItems = [
-        {value: "Ordered", label: "New"},
-        {value: "Received", label: "Received"},
-        {value: "In Progress", label: "In Progress"},
-        {value: "Completed", label: "Completed"}
+        {value: "Ordered", label: "Ordered", amount: orders.filter(order => order.date.toDateString() === selectedDate.toDateString() && order.status === "Ordered").length},
+        {value: "Received", label: "Received", amount: orders.filter(order => order.date.toDateString() === selectedDate.toDateString() && order.status === "Received").length},
+        {value: "In Progress", label: "In Progress", amount: orders.filter(order => order.date.toDateString() === selectedDate.toDateString() && order.status === "In Progress").length},
+        {value: "Completed", label: "Completed", amount: orders.filter(order => order.date.toDateString() === selectedDate.toDateString() && order.status === "Completed").length}
     ];
 
+    
+
     return <div className="flex flex-1 flex-col gap-4 p-4">
-    <Calendar />
+    <Calendar orders={orders} changeDate={changeDate}/>
 
     <div className="flex w-full max-w-sm flex-col gap-6">
       <Tabs defaultValue="Ordered">
         <TabsList>
           {TabItems.map((item) => (
-            <TabsTrigger key={item.value} value={item.value}>{item.label}</TabsTrigger>
+            <TabsTrigger key={item.value} value={item.value}>{item.label} {" "} <span className="text-muted-foreground text-xs">{item.amount}</span></TabsTrigger>
           ))}
 
         </TabsList>
@@ -44,18 +68,14 @@ export default function Kitchen({orders, setOrders}: any) {
             <TabsContent value={item.label}>
           <Card>
             <CardHeader>
-              <CardTitle>Account</CardTitle>
+              <CardTitle>{selectedDate.toLocaleDateString()}</CardTitle>
               <CardDescription>
-                Make changes to your account here. Click save when you&apos;re
-                done.
+                {orders.filter(order => order.date.toDateString() === selectedDate.toDateString()).length} orders
               </CardDescription>
             </CardHeader>
             <CardContent className="grid gap-6">
-                <OrderPage status={item.value} orders={orders} setOrders={setOrders}/>           
+                <OrderPage status={item.value} orders={orders.filter(order => order.date.toDateString() === selectedDate.toDateString() && order.status === item.value)} setOrders={setOrders}/>           
             </CardContent>
-            <CardFooter>
-              <Button>Save changes</Button>
-            </CardFooter>
           </Card>
         </TabsContent>
         ))}

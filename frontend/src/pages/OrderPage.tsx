@@ -22,12 +22,12 @@ import { Badge } from "@/components/ui/badge"
 import { useState } from "react"
 import OrderForm from "@/pages/OrderForm"
 
-export default function OrderPage ({orders, setOrders, status}: any){
+export default function OrderPage ({orders, setOrders}: any){
 
     return <div className="flex w-full max-w-md flex-col gap-6">
         
     <ItemGroup className="gap-4">
-      { status && orders.filter((order: any) => order.status === status ).map((order: any) => (
+      { orders.map((order: any) => (
           <Dialog key={order._id}>
         <DialogTrigger asChild>
         <Item key={order._id} variant="outline" role="listitem">

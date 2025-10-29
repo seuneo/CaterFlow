@@ -219,6 +219,132 @@ export default mockOrders = [
         paymentStatus: "Not Paid"
     },
     {
+        _id: 24,
+        name: "Patricia Martinez",
+        contact: "+1-555-7891",
+        date: new Date(2025, 9, 30, 9, 30), // October 30, 2025, 9:30 AM
+        time: "9:30 AM",
+        deliveryMode: "Pickup",
+        status: "Received",
+        orderList: [
+            { name: "Breakfast Plate", quantity: "1" },
+            { name: "Orange Juice", quantity: "1" }
+        ],
+        notes: "No eggs",
+        paymentStatus: "Paid"
+    },
+    {
+        _id: 25,
+        name: "Brian Foster",
+        contact: "+1-555-8901",
+        date: new Date(2025, 9, 30, 16, 45), // October 30, 2025, 4:45 PM
+        time: "4:45 PM",
+        deliveryMode: "Delivery",
+        status: "Ordered",
+        orderList: [
+            { name: "Philly Cheesesteak", quantity: "1" },
+            { name: "French Fries", quantity: "1" }
+        ],
+        notes: "",
+        deliveryAddress: "147 Birch Rd",
+        paymentStatus: "Not Paid"
+    },
+    {
+        _id: 26,
+        name: "Michelle Chang",
+        contact: "+1-555-9012",
+        date: new Date(2025, 9, 31, 12, 15), // October 31, 2025, 12:15 PM
+        time: "12:15 PM",
+        deliveryMode: "Pickup",
+        status: "Received",
+        orderList: [
+            { name: "Halloween Special", quantity: "2" },
+            { name: "Pumpkin Soup", quantity: "1" }
+        ],
+        notes: "Happy Halloween!",
+        paymentStatus: "Paid"
+    },
+    {
+        _id: 27,
+        name: "Ryan O'Connor",
+        contact: "+1-555-0124",
+        date: new Date(2025, 9, 31, 19, 0), // October 31, 2025, 7:00 PM
+        time: "7:00 PM",
+        deliveryMode: "Delivery",
+        status: "Ordered",
+        orderList: [
+            { name: "Spooky Pasta", quantity: "1" },
+            { name: "Ghost Cookies", quantity: "3" }
+        ],
+        notes: "",
+        deliveryAddress: "789 Spooky Lane",
+        paymentStatus: "Not Paid"
+    },
+    {
+        _id: 28,
+        name: "Nicole Taylor",
+        contact: "+1-555-1235",
+        date: new Date(2025, 10, 1, 10, 0), // November 1, 2025, 10:00 AM
+        time: "10:00 AM",
+        deliveryMode: "Pickup",
+        status: "Received",
+        orderList: [
+            { name: "Turkey Sandwich", quantity: "1" },
+            { name: "Apple Cider", quantity: "1" }
+        ],
+        notes: "",
+        paymentStatus: "Paid"
+    },
+    {
+        _id: 29,
+        name: "Justin Moore",
+        contact: "+1-555-2346",
+        date: new Date(2025, 10, 5, 13, 30), // November 5, 2025, 1:30 PM
+        time: "1:30 PM",
+        deliveryMode: "Delivery",
+        status: "Ordered",
+        orderList: [
+            { name: "Chicken Curry", quantity: "1" },
+            { name: "Naan Bread", quantity: "2" },
+            { name: "Rice", quantity: "1" }
+        ],
+        notes: "Mild spice",
+        deliveryAddress: "321 Autumn Dr",
+        paymentStatus: "Not Paid"
+    },
+    {
+        _id: 30,
+        name: "Lauren Harris",
+        contact: "+1-555-3457",
+        date: new Date(2025, 10, 8, 11, 45), // November 8, 2025, 11:45 AM
+        time: "11:45 AM",
+        deliveryMode: "Pickup",
+        status: "Received",
+        orderList: [
+            { name: "Cobb Salad", quantity: "1" },
+            { name: "Iced Tea", quantity: "1" }
+        ],
+        notes: "No bacon",
+        paymentStatus: "Paid"
+    },
+    {
+        _id: 31,
+        name: "Brandon Scott",
+        contact: "+1-555-4568",
+        date: new Date(2025, 10, 15, 17, 15), // November 15, 2025, 5:15 PM
+        time: "5:15 PM",
+        deliveryMode: "Delivery",
+        status: "Ordered",
+        orderList: [
+            { name: "BBQ Chicken", quantity: "2" },
+            { name: "Cornbread", quantity: "2" },
+            { name: "Collard Greens", quantity: "1" }
+        ],
+        notes: "",
+        deliveryAddress: "555 Harvest Way",
+        paymentStatus: "Not Paid"
+    },
+    {
         _id: 16,
         name: "Daniel Kim",
         contact: "+1-555-4567",

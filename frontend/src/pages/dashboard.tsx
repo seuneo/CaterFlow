@@ -16,7 +16,21 @@ import mockOrders from '../mockOrders'
 export default function Dashboard() {
 
     const [currentPage, setCurrentPage] = useState("Admin");
-    const [orders, setOrders] = useState(mockOrders);
+    const [orders, setOrders] = useState<Order[]>(mockOrders);
+
+    interface Order {
+      _id: number;
+      name: string;
+      contact: string;
+      date: Date;
+      time: string;
+      deliveryMode: string;
+      deliveryAddress?: string;
+      status: string;
+      orderList: { name: string; quantity: number | string }[];
+      notes?: string;
+      paymentStatus?: string;
+    }
 
   return (
     <SidebarProvider>
