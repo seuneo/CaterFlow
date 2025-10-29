@@ -28,30 +28,26 @@ const data = {
   navMain: [
     {
       title: "Admin",
-      url: "#",
       icon: IconClipboardList,
     },
     {
       title: "Kitchen",
-      url: "#",
       icon: IconToolsKitchen2,
     },
     {
       title: "Delivery",
-      url: "#",
       icon: IconTruckDelivery,
     },
   ],
   navSecondary: [
     {
       title: "Settings",
-      url: "#",
       icon: IconSettings,
     }
   ],
 }
 
-export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
+export function AppSidebar({ setCurrentPage, ...props }: React.ComponentProps<typeof Sidebar> | any) {
   return (
     <Sidebar collapsible="offcanvas" {...props}>
       <SidebarHeader>
@@ -70,7 +66,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
         </SidebarMenu>
       </SidebarHeader>
       <SidebarContent>
-        <NavMain items={data.navMain} />
+        <NavMain items={data.navMain} setCurrentPage={setCurrentPage} />
         
       </SidebarContent>
       <SidebarFooter>

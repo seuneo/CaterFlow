@@ -11,12 +11,13 @@ import {
 
 export function NavMain({
   items,
+  setCurrentPage,
 }: {
   items: {
     title: string
-    url: string
     icon?: Icon
   }[]
+  setCurrentPage: (page: string) => void
 }) {
   return (
     <SidebarGroup>
@@ -35,7 +36,7 @@ export function NavMain({
         <SidebarMenu>
           {items.map((item) => (
             <SidebarMenuItem key={item.title}>
-              <SidebarMenuButton tooltip={item.title}>
+              <SidebarMenuButton onClick={() => setCurrentPage(item.title)} tooltip={item.title}>
                 {item.icon && <item.icon />}
                 <span>{item.title}</span>
               </SidebarMenuButton>
