@@ -1,9 +1,12 @@
-const mockOrders = [
+let mockOrders = [];
+
+export default mockOrders = [
     {
         _id: 1,
         name: "John Smith",
         contact: "+1-555-0123",
         date: new Date(2025, 9, 3, 10, 30), // October 3, 2025, 10:30 AM
+        time: "10:30 AM",
         deliveryMode: "Pickup",
         status: "Received",
         orderList: [
@@ -18,6 +21,7 @@ const mockOrders = [
         name: "Sarah Johnson",
         contact: "+1-555-0456",
         date: new Date(2025, 9, 7, 14, 0), // October 7, 2025, 2:00 PM
+        time: "2:00 PM",
         deliveryMode: "Delivery",
         status: "Ordered",
         orderList: [
@@ -33,6 +37,7 @@ const mockOrders = [
         name: "Emily Davis",
         contact: "+1-555-0321",
         date: new Date(2025, 8, 17, 9, 45), // September 17, 2025, 9:45 AM
+        time: "9:45 AM",
         deliveryMode: "Delivery",
         status: "Received",
         orderList: [
@@ -47,6 +52,7 @@ const mockOrders = [
         name: "David Brown",
         contact: "+1-555-0654",
         date: new Date(2025, 9, 5, 18, 30), // October 5, 2025, 6:30 PM
+        time: "6:30 PM",
         deliveryMode: "Pickup",
         status: "Ordered",
         orderList: [
@@ -61,6 +67,7 @@ const mockOrders = [
         name: "Lisa Anderson",
         contact: "+1-555-0987",
         date: new Date(2025, 9, 8, 11, 0), // October 8, 2025, 11:00 AM
+        time: "11:00 AM",
         deliveryMode: "Delivery",
         status: "Received",
         orderList: [
@@ -76,6 +83,7 @@ const mockOrders = [
         name: "Robert Taylor",
         contact: "+1-555-1234",
         date: new Date(2025, 9, 12, 8, 30), // October 12, 2025, 8:30 AM
+        time: "8:30 AM",
         deliveryMode: "Pickup",
         status: "Received",
         orderList: [
@@ -90,6 +98,7 @@ const mockOrders = [
         name: "Maria Garcia",
         contact: "+1-555-5678",
         date: new Date(2025, 9, 14, 13, 45), // October 14, 2025, 1:45 PM
+        time: "1:45 PM",
         deliveryMode: "Delivery",
         status: "Ordered",
         orderList: [
@@ -105,6 +114,7 @@ const mockOrders = [
         name: "James Wilson",
         contact: "+1-555-9012",
         date: new Date(2025, 9, 23, 12, 0), // October 23, 2025, 12:00 PM
+        time: "12:00 PM",
         deliveryMode: "Pickup",
         status: "Completed",
         orderList: [
@@ -119,6 +129,7 @@ const mockOrders = [
         name: "Jennifer Lee",
         contact: "+1-555-3456",
         date: new Date(2025, 9, 24, 10, 15), // October 24, 2025, 10:15 AM
+        time: "10:15 AM",
         deliveryMode: "Delivery",
         status: "Received",
         orderList: [
@@ -134,6 +145,7 @@ const mockOrders = [
         name: "Michael Chen",
         contact: "+1-555-7890",
         date: new Date(2025, 9, 25, 17, 30), // October 25, 2025, 5:30 PM
+        time: "5:30 PM",
         deliveryMode: "Pickup",
         status: "Ordered",
         orderList: [
@@ -148,6 +160,7 @@ const mockOrders = [
         name: "Amanda Rodriguez",
         contact: "+1-555-2345",
         date: new Date(2025, 9, 26, 9, 0), // October 26, 2025, 9:00 AM
+        time: "9:00 AM",
         deliveryMode: "Delivery",
         status: "Received",
         orderList: [
@@ -163,6 +176,7 @@ const mockOrders = [
         name: "Michael Chen",
         contact: "+1-555-3456",
         date: new Date(2025, 9, 26, 14, 30), // October 26, 2025, 2:30 PM
+        time: "2:30 PM",
         deliveryMode: "Pickup",
         status: "Pending",
         orderList: [
@@ -178,6 +192,7 @@ const mockOrders = [
         name: "Kevin Thompson",
         contact: "+1-555-6789",
         date: new Date(2025, 9, 27, 14, 20), // October 27, 2025, 2:20 PM
+        time: "2:20 PM",
         deliveryMode: "Pickup",
         status: "Completed",
         orderList: [
@@ -192,6 +207,7 @@ const mockOrders = [
         name: "Sarah Williams",
         contact: "+1-555-0123",
         date: new Date(2025, 9, 28, 11, 45), // October 28, 2025, 11:45 AM
+        time: "11:45 AM",
         deliveryMode: "Delivery",
         status: "Ordered",
         orderList: [
@@ -207,6 +223,7 @@ const mockOrders = [
         name: "Daniel Kim",
         contact: "+1-555-4567",
         date: new Date(2025, 10, 29, 16, 0), // November 29, 2025, 4:00 PM
+        time: "4:00 PM",
         deliveryMode: "Delivery",
         status: "Ordered",
         orderList: [
@@ -219,6 +236,7 @@ const mockOrders = [
         name: "Alex Thompson",
         contact: "+1-555-1111",
         date: new Date(2025, 8, 5, 12, 30), // September 5, 2025, 12:30 PM
+        time: "12:30 PM",
         deliveryMode: "Pickup",
         status: "Received",
         orderList: [
@@ -233,6 +251,7 @@ const mockOrders = [
         name: "Rachel Green",
         contact: "+1-555-2222",
         date: new Date(2025, 8, 12, 15, 45), // September 12, 2025, 3:45 PM
+        time: "3:45 PM",
         deliveryMode: "Delivery",
         status: "Ordered",
         orderList: [
@@ -248,6 +267,7 @@ const mockOrders = [
         name: "Tom Wilson",
         contact: "+1-555-3333",
         date: new Date(2025, 10, 2, 11, 15), // November 2, 2025, 11:15 AM
+        time: "11:15 AM",
         deliveryMode: "Pickup",
         status: "Completed",
         orderList: [
@@ -262,6 +282,7 @@ const mockOrders = [
         name: "Lisa Park",
         contact: "+1-555-4444",
         date: new Date(2025, 10, 8, 14, 0), // November 8, 2025, 2:00 PM
+        time: "2:00 PM",
         deliveryMode: "Delivery",
         status: "Received",
         orderList: [
@@ -277,6 +298,7 @@ const mockOrders = [
         name: "Mark Johnson",
         contact: "+1-555-5555",
         date: new Date(2025, 7, 10, 12, 0), // August 10, 2025, 12:00 PM
+        time: "12:00 PM",
         deliveryMode: "Pickup",
         status: "Received",
         orderList: [
@@ -291,6 +313,7 @@ const mockOrders = [
         name: "Jessica Brown",
         contact: "+1-555-6666",
         date: new Date(2025, 11, 5, 14, 30), // December 5, 2025, 2:30 PM
+        time: "2:30 PM",
         deliveryMode: "Delivery",
         status: "Ordered",
         orderList: [
@@ -306,6 +329,7 @@ const mockOrders = [
         name: "Chris Davis",
         contact: "+1-555-7777",
         date: new Date(2026, 0, 8, 11, 0), // January 8, 2026, 11:00 AM
+        time: "11:00 AM",
         deliveryMode: "Pickup",
         status: "Received",
         orderList: [
@@ -320,6 +344,7 @@ const mockOrders = [
         name: "Anna Wilson",
         contact: "+1-555-8888",
         date: new Date(2026, 1, 14, 13, 15), // February 14, 2026, 1:15 PM
+        time: "1:15 PM",
         deliveryMode: "Delivery",
         status: "Received",
         orderList: [
