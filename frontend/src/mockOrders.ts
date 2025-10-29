@@ -277,22 +277,7 @@ export default mockOrders = [
         notes: "Extra crispy",
         paymentStatus: "Paid"
     },
-    {
-        _id: 20,
-        name: "Lisa Park",
-        contact: "+1-555-4444",
-        date: new Date(2025, 10, 8, 14, 0), // November 8, 2025, 2:00 PM
-        time: "2:00 PM",
-        deliveryMode: "Delivery",
-        status: "Received",
-        orderList: [
-            { name: "Pho Soup", quantity: "1" },
-            { name: "Spring Rolls", quantity: "2" }
-        ],
-        notes: "",
-        deliveryAddress: "777 Birch Ave",
-        paymentStatus: "Paid"
-    },
+
     {
         _id: 20,
         name: "Mark Johnson",
