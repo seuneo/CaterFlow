@@ -14,7 +14,7 @@ import { useState } from "react"
 
 export default function Dashboard() {
 
-    const [currentPage, setCurrentPage] = useState("admin");
+    const [currentPage, setCurrentPage] = useState("Admin");
 
   return (
     <SidebarProvider>
@@ -28,6 +28,7 @@ export default function Dashboard() {
           />
           <h1 className="font-medium">Dashboard</h1>
         </header>
+
         {currentPage === "Admin" && <Admin />}
         {currentPage === "Kitchen" && <Kitchen />}
         {currentPage === "Delivery" && <Delivery />}
