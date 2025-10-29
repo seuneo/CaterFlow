@@ -10,8 +10,6 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog"
 
-import mockOrders from '../mockOrders'
-
 import {
     Item,
     ItemContent,
@@ -24,12 +22,12 @@ import { Badge } from "@/components/ui/badge"
 import { useState } from "react"
 import OrderForm from "@/pages/OrderForm"
 
-export default function OrderPage (){
+export default function OrderPage ({orders, setOrders, status}: any){
 
     return <div className="flex w-full max-w-md flex-col gap-6">
         
     <ItemGroup className="gap-4">
-      {mockOrders.map((order) => (
+      { status && orders.filter((order: any) => order.status === status ).map((order: any) => (
           <Dialog key={order._id}>
         <DialogTrigger asChild>
         <Item key={order._id} variant="outline" role="listitem">
@@ -74,3 +72,43 @@ export default function OrderPage (){
   
   </div>
 }
+
+/*
+do one of these tomorrow
+const [activeDialog, setActiveDialog] = useState<'order-details' | 'edit-order' | null>(null);
+const [selectedOrder, setSelectedOrder] = useState(null);
+
+// In your JSX:
+<Dialog open={activeDialog === 'order-details'} onOpenChange={(open) => !open && setActiveDialog(null)}>
+  <DialogContent>
+  
+    <Button onClick={() => setActiveDialog('edit-order')}>Edit</Button>
+  </DialogContent>
+</Dialog>
+
+<Dialog open={activeDialog === 'edit-order'} onOpenChange={(open) => !open && setActiveDialog(null)}>
+  <DialogContent>
+    
+  </DialogContent>
+</Dialog>
+
+const [dialogMode, setDialogMode] = useState<'view' | 'edit'>('view');
+
+// In DialogContent:
+{dialogMode === 'view' ? (
+  <div>
+   
+    <Button onClick={() => setDialogMode('edit')}>Edit</Button>
+  </div>
+) : (
+  <div>
+   
+    <Button onClick={() => setDialogMode('view')}>Cancel</Button>
+  </div>
+)}
+
+
+
+
+
+*/

@@ -6,15 +6,17 @@ import {
   SidebarProvider,
   SidebarTrigger,
 } from "@/components/ui/sidebar"
-import Calendar from "@/pages/Calendar"
-import Admin from "@/pages/admin"
-import Kitchen from "@/pages/kitchen"
+
+import Admin from "@/pages/Admin"
+import Kitchen from "@/pages/Kitchen"
 import Delivery from "@/pages/Delivery"
-import { useState } from "react"
+import { useState, useEffect } from "react"
+import mockOrders from '../mockOrders'
 
 export default function Dashboard() {
 
     const [currentPage, setCurrentPage] = useState("Admin");
+    const [orders, setOrders] = useState(mockOrders);
 
   return (
     <SidebarProvider>
@@ -29,9 +31,9 @@ export default function Dashboard() {
           <h1 className="font-medium">Dashboard</h1>
         </header>
 
-        {currentPage === "Admin" && <Admin />}
-        {currentPage === "Kitchen" && <Kitchen />}
-        {currentPage === "Delivery" && <Delivery />}
+        {currentPage === "Admin" && <Admin orders={orders} setOrders={setOrders}/>}
+        {currentPage === "Kitchen" && <Kitchen orders={orders} setOrders={setOrders}/>}
+        {currentPage === "Delivery" && <Delivery orders={orders} setOrders={setOrders}/>}
       </SidebarInset>
     </SidebarProvider>
   )
