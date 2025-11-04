@@ -22,17 +22,31 @@ import { User, Phone, Clock, MapPin, Package, Edit, Trash } from "lucide-react"
 import { Badge } from "@/components/ui/badge"
 
 
-export default function OrderDetails({order, setActiveDialog}: any) {
+export default function OrderDetails({page, order, setActiveDialog}: any) {
+
+
+    const editStatus = () => {
+        console.log("editStatus")
+    }
 
     return <DialogContent>
         <DialogHeader>
     <DialogTitle>
         <div className="flex items-center justify-between">
         Order
+        {page === "admin" && 
        <div className="flex items-center gap-2">
             <Button variant="outline" onClick={() => setActiveDialog('edit-order')}><Edit className="h-4 w-4" /> Edit</Button>
             <Button variant="outline" onClick={() => setActiveDialog('delete-order')}><Trash className="h-4 w-4" /> Delete</Button>
-        </div> 
+        </div> }
+        {page === "kitchen" && 
+        <div>
+            <Button variant="outline" onClick={() => editStatus()}> Mark As Received</Button>
+        </div>}
+        {page === "delivery" && 
+        <div>
+            <Button variant="outline" onClick={() => editStatus()}> Mark As Delivered</Button>
+        </div>}
         </div>
     </DialogTitle>
     <DialogDescription>

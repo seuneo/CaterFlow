@@ -74,7 +74,7 @@ export default function Delivery({orders, setOrders}: {orders: Order[], setOrder
               </CardDescription>
             </CardHeader>
             <CardContent className="grid gap-6">
-                <OrderPage orders={
+                <OrderPage page="delivery" orders={
                     orders.filter(order => order.date.toDateString() === selectedDate.toDateString() && order.status === item.value)} setOrders={setOrders}/>           
             </CardContent>
           </Card>

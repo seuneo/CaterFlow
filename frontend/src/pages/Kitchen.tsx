@@ -74,7 +74,7 @@ export default function Kitchen({orders, setOrders}: {orders: Order[], setOrders
               </CardDescription>
             </CardHeader>
             <CardContent className="grid gap-6">
-                <OrderPage status={item.value} orders={orders.filter(order => order.date.toDateString() === selectedDate.toDateString() && order.status === item.value)} setOrders={setOrders}/>           
+                <OrderPage page="kitchen" status={item.value} orders={orders.filter(order => order.date.toDateString() === selectedDate.toDateString() && order.status === item.value)} setOrders={setOrders}/>           
             </CardContent>
           </Card>
         </TabsContent>

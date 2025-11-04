@@ -24,14 +24,14 @@ import OrderForm from "@/pages/OrderForm"
 import DeleteOrder from "@/pages/DeleteOrder"
 import OrderDetails from "@/pages/OrderDetails"
 
-export default function OrderPage ({orders, setOrders}: any){
+export default function OrderPage ({orders, setOrders, page}: any){
 
   const [activeDialog, setActiveDialog] = useState<'order-details' | 'edit-order' | 'delete-order' | null>(null);
   const [selectedOrder, setSelectedOrder] = useState(null);
 
-  const orderDetails = <OrderDetails order={selectedOrder} setActiveDialog={setActiveDialog} />
+  const orderDetails = <OrderDetails page={page} order={selectedOrder} setActiveDialog={setActiveDialog} />
 
-  const editOrder = <OrderForm />
+  const editOrder = <OrderForm order={selectedOrder} setActiveDialog={setActiveDialog} />
   const deleteOrder = <DeleteOrder selectedOrder={selectedOrder} setActiveDialog={setActiveDialog} />
 
     return <div className="flex w-full max-w-md flex-col gap-6">

@@ -29,12 +29,12 @@ import {
 } from "@/components/ui/popover"
 import { Calendar } from "@/components/ui/calendar"
 
-import { CalendarIcon, ClockIcon } from "lucide-react"
+import { CalendarIcon, ClockIcon, TrashIcon } from "lucide-react"
 import { useState } from "react"
 
 
 
-export default function OrderForm() {
+export default function OrderForm({order, setActiveDialog}: any) {
 
 
 
@@ -60,91 +60,120 @@ export default function OrderForm() {
                 <FieldLabel htmlFor="customer-name">
                   Customer Name
                 </FieldLabel>
-                <Input
+                <Input className="text-sm"
                   id="customer-name"
                   placeholder="Enter Customer Name"
                   required
                 />
               </Field>
+
               <Field>
                 <FieldLabel htmlFor="phone-number">
                   Phone Number
                 </FieldLabel>
-                <Input
+                <Input className="text-sm"
                   id="phone-number"
                   placeholder="Enter Phone Number"
                   required
                 />
               </Field>
-              <div className="grid grid-cols-3 gap-4">
+              <div className="grid grid-cols-2 gap-4">
                 <Field>
-                  <FieldLabel htmlFor="checkout-exp-month-ts6">
-                    Month
+
+                  <FieldLabel htmlFor="date-picker" className="px-1">
+                    Date
                   </FieldLabel>
-                  <Select defaultValue="">
-                    <SelectTrigger id="checkout-exp-month-ts6">
-                      <SelectValue placeholder="MM" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="01">01</SelectItem>
-                      <SelectItem value="02">02</SelectItem>
-                      <SelectItem value="03">03</SelectItem>
-                      <SelectItem value="04">04</SelectItem>
-                      <SelectItem value="05">05</SelectItem>
-                      <SelectItem value="06">06</SelectItem>
-                      <SelectItem value="07">07</SelectItem>
-                      <SelectItem value="08">08</SelectItem>
-                      <SelectItem value="09">09</SelectItem>
-                      <SelectItem value="10">10</SelectItem>
-                      <SelectItem value="11">11</SelectItem>
-                      <SelectItem value="12">12</SelectItem>
-                    </SelectContent>
-                  </Select>
+                  <Popover open={open} onOpenChange={setOpen}>
+          <PopoverTrigger asChild>
+            <Button
+              variant="outline"
+              id="date-picker"
+              className="w-32 justify-between font-normal"
+            >
+              {date ? date.toLocaleDateString() : "Select date"}
+              <CalendarIcon />
+            </Button>
+          </PopoverTrigger>
+          <PopoverContent className="w-auto overflow-hidden p-0" align="start">
+            <Calendar
+              mode="single"
+              selected={date}
+              captionLayout="dropdown"
+              onSelect={(date) => {
+                setDate(date)
+                setOpen(false)
+              }}
+            />
+          </PopoverContent>
+        </Popover>
+
+
+
+                  </Field>
+                  <Field>
+                    <FieldLabel htmlFor="time-picker" className="px-1">Time</FieldLabel>
+
+                   
+        <Input
+          type="time"
+          id="time-picker"
+          step="1"
+          defaultValue="10:30:00"
+          className="bg-background appearance-none [&::-webkit-calendar-picker-indicator]:hidden [&::-webkit-calendar-picker-indicator]:appearance-none"
+        />
                 </Field>
-                <Field>
-                  <FieldLabel htmlFor="checkout-7j9-exp-year-f59">
-                    Year
-                  </FieldLabel>
-                  <Select defaultValue="">
-                    <SelectTrigger id="checkout-7j9-exp-year-f59">
-                      <SelectValue placeholder="YYYY" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="2024">2024</SelectItem>
-                      <SelectItem value="2025">2025</SelectItem>
-                      <SelectItem value="2026">2026</SelectItem>
-                      <SelectItem value="2027">2027</SelectItem>
-                      <SelectItem value="2028">2028</SelectItem>
-                      <SelectItem value="2029">2029</SelectItem>
-                    </SelectContent>
-                  </Select>
-                </Field>
-                <Field>
-                  <FieldLabel htmlFor="checkout-7j9-cvv">CVV</FieldLabel>
-                  <Input id="checkout-7j9-cvv" placeholder="123" required />
-                </Field>
+                
               </div>
+
+              <Field>
+                <FieldLabel htmlFor="delivery-mode" className="px-1">Delivery Mode</FieldLabel>
+                <Select defaultValue="Pickup">
+                  <SelectTrigger id="delivery-mode" className="text-sm">
+                    <SelectValue placeholder="Select Delivery Mode" />
+                  </SelectTrigger>
+                  <SelectContent className="text-sm">
+                    <SelectItem value="Pickup" className="text-sm">Pickup</SelectItem>
+                    <SelectItem value="Delivery" className="text-sm">Delivery</SelectItem>
+                  </SelectContent>
+                </Select>
+              </Field>
             </FieldGroup>
           </FieldSet>
           <FieldSeparator />
           <FieldSet>
-            <FieldLegend>Billing Address</FieldLegend>
+            <FieldLegend>Order Details</FieldLegend>
             <FieldDescription>
-              The billing address associated with your payment method
+              Enter the order details
             </FieldDescription>
             <FieldGroup>
-              <Field orientation="horizontal">
-                <Checkbox
-                  id="checkout-7j9-same-as-shipping-wgm"
-                  defaultChecked
-                />
-                <FieldLabel
-                  htmlFor="checkout-7j9-same-as-shipping-wgm"
-                  className="font-normal"
-                >
-                  Same as shipping address
-                </FieldLabel>
-              </Field>
+              <div className="grid grid-cols-4 gap-4">
+      <Field className="col-span-2">
+
+        <Input placeholder="Item Name" className="text-sm"/>
+                    
+                    
+                  </Field>
+                  <Field>
+                    <Input placeholder="Qty" className="text-sm"/>
+
+                  </Field>
+                  <Field>
+                    <Button variant="outline" type="button">Add Item</Button>
+                  </Field>
+
+                  {order.orderList.map((item: any) => (
+                    < >
+                      <div className="col-span-2 text-sm">{item.name}</div>
+                      <div className="text-sm">{item.quantity}</div>
+                      <Button variant="outline" type="button">
+                        <TrashIcon />
+                      </Button>
+                    </>
+                  ))}
+  
+              </div>
+              
+              
             </FieldGroup>
           </FieldSet>
           <FieldSet>
@@ -156,7 +185,7 @@ export default function OrderForm() {
                 <Textarea
                   id="notes"
                   placeholder="Add any additional comments"
-                  className="resize-none"
+                  className="text-sm"
                 />
               </Field>
             </FieldGroup>

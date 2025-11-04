@@ -45,7 +45,7 @@ export default function Admin({orders, setOrders}: {orders: Order[], setOrders: 
             <CardDescription>{orders.filter(order => order.date.toDateString() === selectedDate.toDateString()).length} orders</CardDescription>
         </CardHeader>
         <CardContent>
-            <OrderPage orders={orders.filter(order => order.date.toDateString() === selectedDate.toDateString())} setOrders={setOrders}/>
+            <OrderPage page="admin" orders={orders.filter(order => order.date.toDateString() === selectedDate.toDateString())} setOrders={setOrders}/>
             </CardContent>
 
     </Card>  
