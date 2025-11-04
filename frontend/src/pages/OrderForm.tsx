@@ -8,42 +8,168 @@ import {
     DialogClose,
     DialogFooter,
   } from "@/components/ui/dialog"
+  import { FieldGroup, 
+    FieldSet, 
+    FieldLegend, 
+    FieldDescription, 
+    Field,
+    FieldLabel,
+    FieldSeparator,
+   } from "@/components/ui/field"
+import { Select, SelectTrigger, SelectValue, SelectContent, SelectItem } from "@/components/ui/select"
 import { Button } from "@/components/ui/button"
 import { Label } from "@/components/ui/label"
 import { Input } from "@/components/ui/input"
+import { Checkbox } from "@/components/ui/checkbox"
+import { Textarea } from "@/components/ui/textarea"
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover"
+import { Calendar } from "@/components/ui/calendar"
+
+import { CalendarIcon, ClockIcon } from "lucide-react"
+import { useState } from "react"
+
+
 
 export default function OrderForm() {
+
+
+
+
+  const [open, setOpen] = useState(false)
+  const [date, setDate] = useState<Date | undefined>(undefined)
+
+
+
+
+
     return (
-        <Dialog>
+      <DialogContent className="w-full max-w-md max-h-[90vh] overflow-y-auto">
       <form>
-        <DialogTrigger asChild>
-        <Button variant="outline">Edit</Button>        </DialogTrigger>
-        <DialogContent className="sm:max-w-[425px]">
-          <DialogHeader>
-            <DialogTitle>Edit profile</DialogTitle>
-            <DialogDescription>
-              Make changes to your profile here. Click save when you&apos;re
-              done.
-            </DialogDescription>
-          </DialogHeader>
-          <div className="grid gap-4">
-            <div className="grid gap-3">
-              <Label htmlFor="name-1">Name</Label>
-              <Input id="name-1" name="name" defaultValue="Pedro Duarte" />
-            </div>
-            <div className="grid gap-3">
-              <Label htmlFor="username-1">Username</Label>
-              <Input id="username-1" name="username" defaultValue="@peduarte" />
-            </div>
-          </div>
-          <DialogFooter>
-            <DialogClose asChild>
-              <Button variant="outline">Cancel</Button>
-            </DialogClose>
-            <Button type="submit">Save changes</Button>
-          </DialogFooter>
-        </DialogContent>
+        <FieldGroup>
+          <FieldSet>
+            <FieldLegend>Customer Details</FieldLegend>
+            <FieldDescription>
+              Enter the customer details
+            </FieldDescription>
+            <FieldGroup>
+              <Field>
+                <FieldLabel htmlFor="customer-name">
+                  Customer Name
+                </FieldLabel>
+                <Input
+                  id="customer-name"
+                  placeholder="Enter Customer Name"
+                  required
+                />
+              </Field>
+              <Field>
+                <FieldLabel htmlFor="phone-number">
+                  Phone Number
+                </FieldLabel>
+                <Input
+                  id="phone-number"
+                  placeholder="Enter Phone Number"
+                  required
+                />
+              </Field>
+              <div className="grid grid-cols-3 gap-4">
+                <Field>
+                  <FieldLabel htmlFor="checkout-exp-month-ts6">
+                    Month
+                  </FieldLabel>
+                  <Select defaultValue="">
+                    <SelectTrigger id="checkout-exp-month-ts6">
+                      <SelectValue placeholder="MM" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="01">01</SelectItem>
+                      <SelectItem value="02">02</SelectItem>
+                      <SelectItem value="03">03</SelectItem>
+                      <SelectItem value="04">04</SelectItem>
+                      <SelectItem value="05">05</SelectItem>
+                      <SelectItem value="06">06</SelectItem>
+                      <SelectItem value="07">07</SelectItem>
+                      <SelectItem value="08">08</SelectItem>
+                      <SelectItem value="09">09</SelectItem>
+                      <SelectItem value="10">10</SelectItem>
+                      <SelectItem value="11">11</SelectItem>
+                      <SelectItem value="12">12</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </Field>
+                <Field>
+                  <FieldLabel htmlFor="checkout-7j9-exp-year-f59">
+                    Year
+                  </FieldLabel>
+                  <Select defaultValue="">
+                    <SelectTrigger id="checkout-7j9-exp-year-f59">
+                      <SelectValue placeholder="YYYY" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="2024">2024</SelectItem>
+                      <SelectItem value="2025">2025</SelectItem>
+                      <SelectItem value="2026">2026</SelectItem>
+                      <SelectItem value="2027">2027</SelectItem>
+                      <SelectItem value="2028">2028</SelectItem>
+                      <SelectItem value="2029">2029</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </Field>
+                <Field>
+                  <FieldLabel htmlFor="checkout-7j9-cvv">CVV</FieldLabel>
+                  <Input id="checkout-7j9-cvv" placeholder="123" required />
+                </Field>
+              </div>
+            </FieldGroup>
+          </FieldSet>
+          <FieldSeparator />
+          <FieldSet>
+            <FieldLegend>Billing Address</FieldLegend>
+            <FieldDescription>
+              The billing address associated with your payment method
+            </FieldDescription>
+            <FieldGroup>
+              <Field orientation="horizontal">
+                <Checkbox
+                  id="checkout-7j9-same-as-shipping-wgm"
+                  defaultChecked
+                />
+                <FieldLabel
+                  htmlFor="checkout-7j9-same-as-shipping-wgm"
+                  className="font-normal"
+                >
+                  Same as shipping address
+                </FieldLabel>
+              </Field>
+            </FieldGroup>
+          </FieldSet>
+          <FieldSet>
+            <FieldGroup>
+              <Field>
+                <FieldLabel htmlFor="notes">
+                  Notes
+                </FieldLabel>
+                <Textarea
+                  id="notes"
+                  placeholder="Add any additional comments"
+                  className="resize-none"
+                />
+              </Field>
+            </FieldGroup>
+          </FieldSet>
+          <Field orientation="horizontal">
+            <Button type="submit">Submit</Button>
+            <Button variant="outline" type="button">
+              Cancel
+            </Button>
+          </Field>
+        </FieldGroup>
       </form>
-    </Dialog>
+    </DialogContent>
+    
     )
 }

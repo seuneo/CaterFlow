@@ -21,16 +21,24 @@ import {
 import { Badge } from "@/components/ui/badge"
 import { useState } from "react"
 import OrderForm from "@/pages/OrderForm"
+import DeleteOrder from "@/pages/DeleteOrder"
+import OrderDetails from "@/pages/OrderDetails"
 
 export default function OrderPage ({orders, setOrders}: any){
+
+  const [activeDialog, setActiveDialog] = useState<'order-details' | 'edit-order' | 'delete-order' | null>(null);
+  const [selectedOrder, setSelectedOrder] = useState(null);
+
+  const orderDetails = <OrderDetails order={selectedOrder} setActiveDialog={setActiveDialog} />
+
+  const editOrder = <OrderForm />
+  const deleteOrder = <DeleteOrder selectedOrder={selectedOrder} setActiveDialog={setActiveDialog} />
 
     return <div className="flex w-full max-w-md flex-col gap-6">
         
     <ItemGroup className="gap-4">
       { orders.map((order: any) => (
-          <Dialog key={order._id}>
-        <DialogTrigger asChild>
-        <Item key={order._id} variant="outline" role="listitem">
+        <Item key={order._id} variant="outline" role="listitem" onClick={() => {setActiveDialog('order-details'); setSelectedOrder(order)}}>
           
             <ItemContent>
               <ItemTitle className="line-clamp-1">
@@ -52,63 +60,18 @@ export default function OrderPage ({orders, setOrders}: any){
           
           
         </Item>
-  </DialogTrigger>
-  <DialogContent>
-    <DialogHeader>
-    <DialogTitle>Order</DialogTitle>
-    <DialogDescription>
-      {order.name} {order.contact}
-    </DialogDescription>
-    <Button variant="outline">Edit</Button>
-    <Button variant="outline">Delete</Button>
-  </DialogHeader>
-
-    </DialogContent>
-
-  </Dialog>
       ))}
     </ItemGroup>
+
+    <Dialog open={activeDialog != null}>
+      {activeDialog === 'order-details' && orderDetails}
+      {activeDialog === 'edit-order' && editOrder}
+      {activeDialog === 'delete-order' && deleteOrder}
+
+    </Dialog>
+
+
     
   
   </div>
 }
-
-/*
-do one of these tomorrow
-const [activeDialog, setActiveDialog] = useState<'order-details' | 'edit-order' | null>(null);
-const [selectedOrder, setSelectedOrder] = useState(null);
-
-// In your JSX:
-<Dialog open={activeDialog === 'order-details'} onOpenChange={(open) => !open && setActiveDialog(null)}>
-  <DialogContent>
-  
-    <Button onClick={() => setActiveDialog('edit-order')}>Edit</Button>
-  </DialogContent>
-</Dialog>
-
-<Dialog open={activeDialog === 'edit-order'} onOpenChange={(open) => !open && setActiveDialog(null)}>
-  <DialogContent>
-    
-  </DialogContent>
-</Dialog>
-
-const [dialogMode, setDialogMode] = useState<'view' | 'edit'>('view');
-
-// In DialogContent:
-{dialogMode === 'view' ? (
-  <div>
-   
-    <Button onClick={() => setDialogMode('edit')}>Edit</Button>
-  </div>
-) : (
-  <div>
-   
-    <Button onClick={() => setDialogMode('view')}>Cancel</Button>
-  </div>
-)}
-
-
-
-
-
-*/
