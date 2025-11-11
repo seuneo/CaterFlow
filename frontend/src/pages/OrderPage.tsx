@@ -19,17 +19,30 @@ import {
   } from "@/components/ui/item"
 
 import { Badge } from "@/components/ui/badge"
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import OrderForm from "@/pages/OrderForm"
 import DeleteOrder from "@/pages/DeleteOrder"
 import OrderDetails from "@/pages/OrderDetails"
-
+interface Order {
+  _id: number;
+  name: string;
+  contact: string;
+  date: Date;
+  time: string;
+  deliveryMode: string;
+  deliveryAddress?: string;
+  status: string;
+  orderList: { name: string; quantity: number | string }[];
+  notes?: string;
+  paymentStatus?: string;
+}
 export default function OrderPage ({orders, setOrders, page}: any){
 
   const [activeDialog, setActiveDialog] = useState<'order-details' | 'edit-order' | 'delete-order' | null>(null);
-  const [selectedOrder, setSelectedOrder] = useState(null);
+  const [selectedOrder, setSelectedOrder] = useState<Order | null>(null);
 
-  const orderDetails = <OrderDetails page={page} order={selectedOrder} setActiveDialog={setActiveDialog} />
+ 
+  const orderDetails = <OrderDetails page={page} order={selectedOrder} setActiveDialog={setActiveDialog} setOrders={setOrders} setSelectedOrder={setSelectedOrder}/>
 
   const editOrder = <OrderForm order={selectedOrder} setActiveDialog={setActiveDialog} />
   const deleteOrder = <DeleteOrder selectedOrder={selectedOrder} setActiveDialog={setActiveDialog} />

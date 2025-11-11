@@ -1,5 +1,3 @@
-"use client"
-
 import * as React from "react"
 import {
   IconSettings,
@@ -9,20 +7,18 @@ import {
 } from "@tabler/icons-react"
 
 import { NavMain } from "@/components/nav-main"
-import { NavProjects } from "@/components/nav-projects"
+import { NavSecondary } from "@/components/nav-secondary"
 import { NavUser } from "@/components/nav-user"
 import {
   Sidebar,
   SidebarContent,
   SidebarFooter,
   SidebarHeader,
-  SidebarRail,
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
 } from "@/components/ui/sidebar"
 
-// This is sample data.
 const data = {
   user: {
     name: "Admin",
@@ -51,11 +47,10 @@ const data = {
   ],
 }
 
-export function AppSidebar({ setCurrentPage, ...props }: React.ComponentProps<typeof Sidebar>) {
+export function AppSidebar({ setCurrentPage, ...props }: React.ComponentProps<typeof Sidebar> | any) {
   return (
-    <Sidebar collapsible="icon" {...props}>
+    <Sidebar collapsible="offcanvas" {...props}>
       <SidebarHeader>
-
         <SidebarMenu>
           <SidebarMenuItem>
             <SidebarMenuButton
@@ -72,11 +67,11 @@ export function AppSidebar({ setCurrentPage, ...props }: React.ComponentProps<ty
       </SidebarHeader>
       <SidebarContent>
         <NavMain items={data.navMain} setCurrentPage={setCurrentPage} />
+        
       </SidebarContent>
       <SidebarFooter>
         <NavUser user={data.user} />
       </SidebarFooter>
-      <SidebarRail />
     </Sidebar>
   )
 }

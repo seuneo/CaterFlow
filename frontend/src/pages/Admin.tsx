@@ -32,7 +32,7 @@ export default function Admin({orders, setOrders}: {orders: Order[], setOrders: 
         setSelectedDate(date)
     }
 
-    return <div className="flex flex-wrap gap-4 p-4 w-full">
+    return <div className="bg-neutral-100 flex flex-wrap gap-4 p-4 w-full">
     <div className="flex-[1_1_300px] mx-auto sm:mx-0">
   <div className="flex justify-center">
     <Calendar orders={orders} changeDate={changeDate}/>

@@ -22,11 +22,73 @@ import { User, Phone, Clock, MapPin, Package, Edit, Trash } from "lucide-react"
 import { Badge } from "@/components/ui/badge"
 
 
-export default function OrderDetails({page, order, setActiveDialog}: any) {
+export default function OrderDetails({page, order, setActiveDialog, setOrders, setSelectedOrder}: any) {
 
 
+  function statusChangeButton(){
+    var s = ""
+    if(page === "kitchen"){
+    
+    if(order.status == "Ordered"){
+        s = "Confirm Order"
+        
+    }
+
+    else if(order.status == "Received"){
+        s = "Prepare Order"
+
+    }
+    else if(order.status == "In Progress"){
+        s= "Complete Order"
+
+    }
+    else if(order.status == "Completed"){
+
+        s = ""
+    }
+  }
+  else if(page === "delivery"){
+    
+    if(order.status == "Ordered"){
+        s = "Confirm Order"
+    }
+
+    else if(order.status == "Ready for Delivery"){
+        s = "Mark As In Transit"
+    }
+  }
+    return s;
+
+}
     const editStatus = () => {
         console.log("editStatus")
+        setOrders((prevValue: any)=>{
+          const updatedOrder = prevValue.map((item: any)=>{
+              if(item._id == order._id){
+                  
+                  if(order.status == "Ordered"){  
+                    setSelectedOrder({...item, status:"Received"})
+                                        
+                  return {...item, status:"Received"} 
+                  }
+                  else if(order.status == "Received"){
+                    setSelectedOrder({...item, status:"In Progress"})
+
+                  return {...item, status:"In Progress"} 
+                  }
+                  else if(order.status == "In Progress"){
+                    setSelectedOrder({...item, status:"Completed"})
+                      return {...item, status:"Completed"} 
+                  }
+                  else if(order.status == "Completed"){
+                    setSelectedOrder({...item, status:"Completed"})
+                      return {...item, status:"Completed"} 
+                  }
+              }
+                  return item;             
+          });
+          return updatedOrder;
+      })
     }
 
     return <DialogContent>
@@ -41,11 +103,11 @@ export default function OrderDetails({page, order, setActiveDialog}: any) {
         </div> }
         {page === "kitchen" && 
         <div>
-            <Button variant="outline" onClick={() => editStatus()}> Mark As Received</Button>
+            <Button variant="outline" onClick={editStatus}> {statusChangeButton()}</Button>
         </div>}
         {page === "delivery" && 
         <div>
-            <Button variant="outline" onClick={() => editStatus()}> Mark As Delivered</Button>
+            <Button variant="outline" onClick={editStatus}> Mark As Delivered</Button>
         </div>}
         </div>
     </DialogTitle>
