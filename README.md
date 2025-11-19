@@ -1,1 +1,1 @@
-Note that the demo version only has the management side for now.
+Visit demo here: https://seuneo.github.io/CaterFlow/
