@@ -366,10 +366,12 @@ let currentDate = new Date(today.getFullYear(), today.getMonth(), 1); // Start o
 let selectedDate = new Date(today.getFullYear(), today.getMonth(), today.getDate()); // Today's date
 let orderToDelete = null;
 let currentOrderItems = [];
+let currentStatusFilter = 'all';
 
 // DOM elements
 const loginScreen = document.getElementById('login-screen');
 const dashboardScreen = document.getElementById('dashboard-screen');
+const orderDetailsScreen = document.getElementById('order-details-screen');
 const loginForm = document.getElementById('login-form');
 const loginError = document.getElementById('login-error');
 const errorMessage = document.getElementById('error-message');
@@ -379,9 +381,14 @@ const addOrderModal = document.getElementById('add-order-modal');
 const closeModal = document.getElementById('close-modal');
 const calendar = document.getElementById('calendar');
 const ordersList = document.getElementById('orders-list');
+const upcomingOrdersList = document.getElementById('upcoming-orders-list');
+const orderDetailsContent = document.getElementById('order-details-content');
 const currentMonthDisplay = document.getElementById('current-month');
 const prevMonthBtn = document.getElementById('prev-month');
 const nextMonthBtn = document.getElementById('next-month');
+const weekDates = document.getElementById('week-dates');
+const prevWeekBtn = document.getElementById('prev-week-btn');
+const nextWeekBtn = document.getElementById('next-week-btn');
 const confirmDeleteModal = document.getElementById('confirm-delete-modal');
 const closeDeleteModal = document.getElementById('close-delete-modal');
 const cancelDelete = document.getElementById('cancel-delete');
@@ -482,6 +489,16 @@ function setupEventListeners() {
     if (currentMonthDisplay && !currentMonthDisplay.hasAttribute('data-listener-added')) {
         currentMonthDisplay.addEventListener('click', goToToday);
         currentMonthDisplay.setAttribute('data-listener-added', 'true');
+    }
+    
+    // Week view navigation
+    if (prevWeekBtn && !prevWeekBtn.hasAttribute('data-listener-added')) {
+        prevWeekBtn.addEventListener('click', () => navigateWeek(-1));
+        prevWeekBtn.setAttribute('data-listener-added', 'true');
+    }
+    if (nextWeekBtn && !nextWeekBtn.hasAttribute('data-listener-added')) {
+        nextWeekBtn.addEventListener('click', () => navigateWeek(1));
+        nextWeekBtn.setAttribute('data-listener-added', 'true');
     }
     
     // Delete confirmation
@@ -620,6 +637,7 @@ function showLogin() {
 
 function showDashboard() {
     if (loginScreen) loginScreen.classList.add('hidden');
+    if (orderDetailsScreen) orderDetailsScreen.classList.add('hidden');
     if (dashboardScreen) dashboardScreen.classList.remove('hidden');
     
     // Set user greeting
@@ -630,6 +648,7 @@ function showDashboard() {
     
     renderCalendar();
     renderOrders();
+    renderUpcomingOrders();
 }
 
 function showAddOrderModal() {
@@ -814,6 +833,13 @@ function handleAddOrder() {
     hideAddOrderModal();
     renderCalendar();
     renderOrders();
+    renderUpcomingOrders();
+    // Refresh order details if on that screen
+    if (orderDetailsScreen && !orderDetailsScreen.classList.contains('hidden')) {
+        renderWeekView();
+        updateStatusCounts();
+        renderFilteredOrders();
+    }
     alert('Order saved successfully!');
 }
 
@@ -838,6 +864,7 @@ function navigateMonth(direction) {
     
     renderCalendar();
     renderOrders();
+    renderUpcomingOrders();
 }
 
 function goToToday() {
@@ -846,7 +873,78 @@ function goToToday() {
     selectedDate = new Date(today.getFullYear(), today.getMonth(), today.getDate());
     
     renderCalendar();
-    renderOrders();
+    renderUpcomingOrders();
+    showOrderDetails();
+}
+
+function renderUpcomingOrders() {
+    if (!upcomingOrdersList) return;
+    
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+    
+    // Filter orders for today or after, sort by date, and limit to 5
+    const upcomingOrders = orders
+        .filter(order => {
+            const orderDate = new Date(order.date);
+            orderDate.setHours(0, 0, 0, 0);
+            return orderDate >= today;
+        })
+        .sort((a, b) => new Date(a.date) - new Date(b.date))
+        .slice(0, 5);
+    
+    upcomingOrdersList.innerHTML = '';
+    
+    if (upcomingOrders.length === 0) {
+        const noOrders = document.createElement('div');
+        noOrders.className = 'past-orders-list-no-orders';
+        noOrders.textContent = 'No upcoming orders';
+        upcomingOrdersList.appendChild(noOrders);
+        return;
+    }
+    
+    upcomingOrders.forEach(order => {
+        const orderElement = document.createElement('div');
+        orderElement.className = 'order-list-item';
+        orderElement.style.cursor = 'pointer';
+        
+        const timeString = order.date.toLocaleTimeString([], { 
+            hour: '2-digit', 
+            minute: '2-digit' 
+        }).toUpperCase();
+        
+        const dateString = order.date.toLocaleDateString([], {
+            month: 'short',
+            day: 'numeric'
+        });
+        
+        const orderItems = order.items || order.orderList || [];
+        const totalItems = orderItems.reduce((sum, item) => sum + (parseInt(item.quantity) || 0), 0);
+        
+        // Get the date from the order (without time component for date selection)
+        const orderDate = new Date(order.date);
+        orderDate.setHours(0, 0, 0, 0);
+        
+        orderElement.innerHTML = `
+            <div>
+                <div class="order-customer-name">${order.name || order.customerName}</div>
+                <div class="order-details">
+                    <span class="order-contact">${totalItems} item${totalItems !== 1 ? 's' : ''}</span>
+                </div>
+            </div>
+            <div>
+                <div class="order-time">${timeString}</div>
+                <div class="order-time" style="font-size: 11px; margin-top: 2px;">${dateString}</div>
+            </div>
+        `;
+        
+        // Add click event to open order details for this date
+        orderElement.addEventListener('click', () => {
+            selectDate(orderDate);
+        });
+        
+        upcomingOrdersList.appendChild(orderElement);
+    });
 }
 
 function renderCalendar() {
@@ -941,10 +1039,13 @@ function renderCalendar() {
 function selectDate(date) {
     selectedDate = date;
     renderCalendar();
-    renderOrders();
+    renderUpcomingOrders();
+    showOrderDetails();
 }
 
 function renderOrders() {
+    if (!ordersList) return; // Orders list section removed from kitchen.html
+    
     const selectedDateString = selectedDate.toDateString();
     const dayOrders = orders.filter(order => 
         order.date.toDateString() === selectedDateString
@@ -962,36 +1063,387 @@ function renderOrders() {
     
     dayOrders.forEach(order => {
         const orderElement = document.createElement('div');
-        orderElement.className = 'order-list-item';
+        orderElement.className = 'order-receipt-item';
         
         const timeString = order.date.toLocaleTimeString([], { 
             hour: '2-digit', 
             minute: '2-digit' 
         }).toUpperCase();
         
-        const orderListString = (order.items || order.orderList).map(item => 
-            `${item.quantity}x ${item.name}`
-        ).join(', ');
+        const orderItems = order.items || order.orderList || [];
+        const totalItems = orderItems.reduce((sum, item) => sum + (parseInt(item.quantity) || 0), 0);
+        
+        // Build items list HTML
+        let itemsHTML = '';
+        if (orderItems.length > 0) {
+            itemsHTML = orderItems.map(item => `
+                <div class="receipt-item-row">
+                    <span class="receipt-item-name">${item.name}</span>
+                    <span class="receipt-item-qty">${item.quantity}</span>
+                </div>
+            `).join('');
+        } else {
+            itemsHTML = '<div class="receipt-item-row"><span class="receipt-item-name">No items</span></div>';
+        }
         
         orderElement.innerHTML = `
-            <div class="order-customer-name">${order.name || order.customerName}</div>
-            <div class="order-list-buttons">
-                <button class="order-info-edit" onclick="editOrder('${order._id}')">
-                    <span class="material-symbols-outlined">edit</span>
-                </button>
-                <button class="order-info-delete" onclick="deleteOrder('${order._id}')">
-                    <span class="material-symbols-outlined">delete</span>
+            <div class="receipt-header">
+                <div class="receipt-customer-info">
+                    <div class="receipt-customer-name">${order.name || order.customerName}</div>
+                    <div class="receipt-contact">${order.contact}</div>
+                </div>
+                <div class="receipt-status-section">
+                    <div class="receipt-time">${timeString}</div>
+                    <div class="receipt-delivery-mode-header">${order.deliveryMode || 'N/A'}</div>
+                </div>
+            </div>
+            
+            <div class="receipt-items-section ${!order.notes ? 'no-border-bottom' : ''}">
+                <div class="receipt-items-header">
+                    <span>Items (${totalItems} total)</span>
+                </div>
+                <div class="receipt-items-list">
+                    ${itemsHTML}
+                </div>
+            </div>
+            
+            ${order.notes ? `
+            <div class="receipt-notes">
+                <div class="receipt-notes-label">Notes:</div>
+                <div class="receipt-notes-content">${order.notes}</div>
+            </div>
+            ` : ''}
+            
+            <div class="receipt-status-change-section">
+                <button class="receipt-status-change-button receipt-status-${order.status.toLowerCase().replace(' ', '-')}" ${order.status === 'Completed' ? 'disabled' : `onclick="changeOrderStatus('${order._id}')"`} title="${order.status === 'Completed' ? 'Order is complete' : 'Click to change status'}">
+                    ${getStatusButtonText(order.status)}
                 </button>
             </div>
-            <div class="order-details">
-                <div class="order-contact">${order.contact.slice(-4)}</div>
-                <div class="order-info-status">${order.status}</div>
-            </div>
-            <div class="order-time">${timeString}</div>
         `;
         
         ordersList.appendChild(orderElement);
     });
+}
+
+function showOrderDetails() {
+    if (dashboardScreen) dashboardScreen.classList.add('hidden');
+    if (orderDetailsScreen) orderDetailsScreen.classList.remove('hidden');
+    
+    // Reset filter to 'all' when opening order details
+    currentStatusFilter = 'all';
+    updateFilterButtons();
+    updateStatusCounts();
+    renderWeekView();
+    renderFilteredOrders();
+}
+
+function renderWeekView() {
+    if (!weekDates) return;
+    
+    // Get start of week (Sunday) for the selected date
+    const selected = new Date(selectedDate);
+    const day = selected.getDay();
+    const startOfWeek = new Date(selected);
+    startOfWeek.setDate(selected.getDate() - day);
+    startOfWeek.setHours(0, 0, 0, 0);
+    
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+    
+    weekDates.innerHTML = '';
+    
+    // Generate 7 days of the week
+    for (let i = 0; i < 7; i++) {
+        const date = new Date(startOfWeek);
+        date.setDate(startOfWeek.getDate() + i);
+        
+        const dateNum = date.getDate();
+        const dateString = date.toDateString();
+        const isSelected = dateString === selectedDate.toDateString();
+        const isToday = dateString === today.toDateString();
+        const isPast = date < today;
+        
+        // Check if this date has orders
+        const hasOrders = orders.some(order => {
+            const orderDate = new Date(order.date);
+            orderDate.setHours(0, 0, 0, 0);
+            return orderDate.toDateString() === dateString;
+        });
+        
+        let className = 'week-dates-num';
+        
+        if (hasOrders) {
+            if (isToday) {
+                className = 'week-dates-num-today-order-true';
+            } else if (isPast) {
+                className = 'week-dates-num-past-order-true';
+            } else {
+                className = 'week-dates-num-order-true';
+            }
+        } else if (isToday) {
+            className = 'week-dates-num-today';
+        } else if (isPast) {
+            className = 'week-dates-num-past';
+        }
+        
+        if (isSelected) {
+            className += ' week-dates-num-selected';
+        }
+        
+        const button = document.createElement('button');
+        button.className = className;
+        button.textContent = dateNum;
+        button.onclick = () => {
+            selectedDate = new Date(date);
+            renderWeekView();
+            updateStatusCounts();
+            renderFilteredOrders();
+        };
+        
+        weekDates.appendChild(button);
+    }
+}
+
+function navigateWeek(direction) {
+    const selected = new Date(selectedDate);
+    selected.setDate(selected.getDate() + (direction * 7));
+    selectedDate = selected;
+    
+    renderWeekView();
+    updateStatusCounts();
+    renderFilteredOrders();
+}
+
+function filterOrdersByStatus(status) {
+    currentStatusFilter = status;
+    updateFilterButtons();
+    renderWeekView();
+    renderFilteredOrders();
+}
+
+function updateStatusCounts() {
+    const selectedDateString = selectedDate.toDateString();
+    const dayOrders = orders.filter(order => 
+        order.date.toDateString() === selectedDateString
+    );
+    
+    // Calculate counts for each status
+    const counts = {
+        'all': dayOrders.length,
+        'Pending': dayOrders.filter(o => o.status === 'Pending' || o.status === 'Ordered').length,
+        'Received': dayOrders.filter(o => o.status === 'Received').length,
+        'In Progress': dayOrders.filter(o => o.status === 'In Progress').length,
+        'Completed': dayOrders.filter(o => o.status === 'Completed').length
+    };
+    
+    // Update count displays
+    const statuses = ['all', 'Pending', 'Received', 'In Progress', 'Completed'];
+    statuses.forEach(status => {
+        // Handle spaces in status names by using the exact ID format from HTML
+        const statusId = status === 'In Progress' ? 'count-In Progress' : `count-${status}`;
+        const countElement = document.getElementById(statusId);
+        if (countElement) {
+            countElement.textContent = counts[status];
+        }
+    });
+    
+    // Update bell icon color based on pending count
+    const pendingBellIcon = document.getElementById('pending-bell-icon');
+    if (pendingBellIcon) {
+        if (counts['Pending'] > 0) {
+            pendingBellIcon.style.color = '#dc2626'; // Red color
+        } else {
+            pendingBellIcon.style.color = ''; // Reset to default
+        }
+    }
+}
+
+function updateFilterButtons() {
+    const filterButtons = document.querySelectorAll('.status-filter-btn');
+    filterButtons.forEach(btn => {
+        if (btn.getAttribute('data-status') === currentStatusFilter) {
+            btn.classList.add('active');
+        } else {
+            btn.classList.remove('active');
+        }
+    });
+}
+
+function renderFilteredOrders() {
+    updateStatusCounts(); // Update counts before rendering
+    const selectedDateString = selectedDate.toDateString();
+    let dayOrders = orders.filter(order => 
+        order.date.toDateString() === selectedDateString
+    );
+    
+    // Apply status filter
+    if (currentStatusFilter !== 'all') {
+        if (currentStatusFilter === 'Pending') {
+            // Include both 'Pending' and 'Ordered' statuses
+            dayOrders = dayOrders.filter(order => order.status === 'Pending' || order.status === 'Ordered');
+        } else {
+            dayOrders = dayOrders.filter(order => order.status === currentStatusFilter);
+        }
+    }
+    
+    if (!orderDetailsContent) return;
+    orderDetailsContent.innerHTML = '';
+    
+    if (dayOrders.length === 0) {
+        const noOrders = document.createElement('div');
+        noOrders.className = 'past-orders-list-no-orders';
+        noOrders.textContent = 'No Orders Yet';
+        orderDetailsContent.appendChild(noOrders);
+        return;
+    }
+    
+    dayOrders.forEach(order => {
+        const orderElement = document.createElement('div');
+        orderElement.className = 'order-receipt-item';
+        
+        const timeString = order.date.toLocaleTimeString([], { 
+            hour: '2-digit', 
+            minute: '2-digit' 
+        }).toUpperCase();
+        
+        const orderItems = order.items || order.orderList || [];
+        const totalItems = orderItems.reduce((sum, item) => sum + (parseInt(item.quantity) || 0), 0);
+        
+        // Build items list HTML
+        let itemsHTML = '';
+        if (orderItems.length > 0) {
+            itemsHTML = orderItems.map(item => `
+                <div class="receipt-item-row">
+                    <span class="receipt-item-name">${item.name}</span>
+                    <span class="receipt-item-qty">${item.quantity}</span>
+                </div>
+            `).join('');
+        } else {
+            itemsHTML = '<div class="receipt-item-row"><span class="receipt-item-name">No items</span></div>';
+        }
+        
+        orderElement.innerHTML = `
+            <div class="receipt-header">
+                <div class="receipt-customer-info">
+                    <div class="receipt-customer-name">${order.name || order.customerName}</div>
+                    <div class="receipt-contact">${order.contact}</div>
+                </div>
+                <div class="receipt-status-section">
+                    <div class="receipt-time">${timeString}</div>
+                    <div class="receipt-delivery-mode-header">${order.deliveryMode || 'N/A'}</div>
+                </div>
+            </div>
+            
+            <div class="receipt-items-section ${!order.notes ? 'no-border-bottom' : ''}">
+                <div class="receipt-items-header">
+                    <span>Items (${totalItems} total)</span>
+                </div>
+                <div class="receipt-items-list">
+                    ${itemsHTML}
+                </div>
+            </div>
+            
+            ${order.notes ? `
+            <div class="receipt-notes">
+                <div class="receipt-notes-label">Notes:</div>
+                <div class="receipt-notes-content">${order.notes}</div>
+            </div>
+            ` : ''}
+            
+            <div class="receipt-status-change-section">
+                <button class="receipt-status-change-button receipt-status-${order.status.toLowerCase().replace(' ', '-')}" ${order.status === 'Completed' ? 'disabled' : `onclick="changeOrderStatus('${order._id}')"`} title="${order.status === 'Completed' ? 'Order is complete' : 'Click to change status'}">
+                    ${getStatusButtonText(order.status)}
+                </button>
+            </div>
+        `;
+        
+        orderDetailsContent.appendChild(orderElement);
+    });
+}
+
+function goBackToCalendar() {
+    if (orderDetailsScreen) orderDetailsScreen.classList.add('hidden');
+    if (dashboardScreen) dashboardScreen.classList.remove('hidden');
+}
+
+function getStatusButtonText(status) {
+    const statusTexts = {
+        'Pending': 'Accept Order',
+        'Ordered': 'Accept Order',
+        'Received': 'Start Prep',
+        'In Progress': 'Complete Order',
+        'Completed': 'Order Complete'
+    };
+    return statusTexts[status] || 'Change Status';
+}
+
+function changeOrderStatus(orderId) {
+    const order = orders.find(o => o._id == orderId);
+    if (!order) return;
+    
+    // Define status progression
+    const statusFlow = {
+        'Ordered': 'Received',
+        'Pending': 'Received',
+        'Received': 'In Progress',
+        'In Progress': 'Completed',
+        'Completed': 'Completed' // Completed stays completed
+    };
+    
+    const currentStatus = order.status;
+    const nextStatus = statusFlow[currentStatus] || 'Received';
+    
+    // Update the order status
+    orders = orders.map(o => {
+        if (o._id == orderId) {
+            return { ...o, status: nextStatus };
+        }
+        return o;
+    });
+    
+    // Show toast notification based on new status
+    const toastMessages = {
+        'Received': 'Order received',
+        'In Progress': 'Order in progress',
+        'Completed': 'Order completed'
+    };
+    
+    if (toastMessages[nextStatus]) {
+        showToast(toastMessages[nextStatus]);
+    }
+    
+    // Update status filter to match the new status
+    if (orderDetailsScreen && !orderDetailsScreen.classList.contains('hidden')) {
+        currentStatusFilter = nextStatus;
+        updateFilterButtons();
+    }
+    
+    // Refresh displays
+    renderCalendar();
+    renderOrders();
+    renderUpcomingOrders();
+    
+    // Refresh order details if on that screen
+    if (orderDetailsScreen && !orderDetailsScreen.classList.contains('hidden')) {
+        renderWeekView();
+        updateStatusCounts();
+        renderFilteredOrders();
+    }
+}
+
+function showToast(message) {
+    const toast = document.getElementById('toast-notification');
+    const toastMessage = document.getElementById('toast-message');
+    
+    if (!toast || !toastMessage) return;
+    
+    toastMessage.textContent = message;
+    toast.classList.add('show');
+    
+    // Hide toast after 3 seconds
+    setTimeout(() => {
+        toast.classList.remove('show');
+    }, 3000);
 }
 
 function editOrder(orderId) {
@@ -1074,6 +1526,12 @@ function confirmDeleteOrder() {
         orders = orders.filter(order => order._id != orderToDelete);
         renderCalendar();
         renderOrders();
+        renderUpcomingOrders();
+        // Refresh order details if on that screen
+        if (orderDetailsScreen && !orderDetailsScreen.classList.contains('hidden')) {
+            updateStatusCounts();
+            renderFilteredOrders();
+        }
         hideDeleteModal();
     }
 }
