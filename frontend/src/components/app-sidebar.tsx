@@ -51,7 +51,7 @@ const data = {
   ],
 }
 
-export function AppSidebar({ setCurrentPage, ...props }: React.ComponentProps<typeof Sidebar>) {
+export function AppSidebar({ setCurrentPage, ...props }: React.ComponentProps<typeof Sidebar> | any) {
   return (
     <Sidebar collapsible="icon" {...props}>
       <SidebarHeader>

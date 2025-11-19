@@ -21,14 +21,10 @@ export function NavMain({
 }: {
   items: {
     title: string
-    url: string
     icon?: Icon
-    isActive?: boolean
-    items?: {
-      title: string
-      url: string
-    }[]
   }[]
+  setCurrentPage: (page: string) => void
+
 }) {
   return (
     <SidebarGroup>
